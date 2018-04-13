@@ -1,0 +1,461 @@
+{
+	"$schema": "http://json-schema.org/schema#",
+	"title": "ECR",
+	"description": "The definition of an ECR object as seen from the transport level",
+	"id": "https://git2.icl.gtri.org/projects/CDCSTI/repos/json-schema/ECR.json#",
+	"type": "object",
+	"properties": {
+		"Sending Application": {
+			"type": "string"
+		},
+
+		"Provider": {
+			"type": "array",
+			"items": {
+        "type": "object",
+        "properties": {
+  				"ID": {
+						"title": "",
+  					"type": "object",
+  					"properties": {
+  						"value": {
+  							"type": "string",
+								"title": "Value"
+  						},
+  						"type": {
+  							"type": "string",
+								"title": "Type"
+  						}
+  					}
+  				},
+  				"Name": {
+  					"type": "string"
+  				},
+
+  				"Phone": {
+  					"type": "string"
+  				},
+
+  				"Fax": {
+  					"type": "string"
+  				},
+
+  				"Email": {
+  					"type": "string"
+  				},
+
+  				"Facility": {
+  					"type": "string"
+  				},
+  				"Address": {
+  					"type": "string"
+  				},
+  				"Country": {
+  					"type": "string"
+  				}
+        }
+			}
+		},
+		"Facility": {
+			"type": "object",
+			"properties": {
+				"ID": {
+					"type": "string"
+				},
+				"Name": {
+					"type": "string"
+				},
+
+				"Phone": {
+					"type": "string"
+				},
+				"Address": {
+					"type": "string"
+				},
+				"Fax": {
+					"type": "string"
+				},
+				"Hospital_Unit": {
+					"type": "string"
+				}
+			}
+		},
+		"Patient": {
+			"type": "object",
+			"properties": {
+				"ID": {
+					"title": "Patient ID",
+					"type": "array",
+					"items": {
+            "type": "object",
+						"properties": {
+							"value": {
+								"title": "Value",
+								"type": "string"
+							},
+							"type": {
+								"title": "Type",
+								"type": "string"
+							}
+						}
+					}
+				},
+				"Name": {
+					"type": "object",
+					"title": "Patient Name",
+					"properties": {
+						"given": {
+							"title": "First",
+							"type": "string"
+						},
+						"family": {
+							"title": "Last",
+							"type": "string"
+						}
+					}
+				},
+
+				"Parents_Guardians": {
+					"type": "array",
+					"title": "Parents/Guardians",
+					"items": {
+						"type": "object",
+						"properties": {
+							"Name": {
+								"type": "object",
+								"title": " ",
+								"properties": {
+									"given": {
+										"title": "First",
+										"type": "string"
+									},
+									"family": {
+										"title": "Last",
+										"type": "string"
+									}
+								}
+							},
+
+							"Phone": {
+								"type": "string"
+							},
+
+							"Email": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"Street_Address": {
+					"title": "Street Address",
+					"type": "string"
+				},
+
+				"Birth_Date": {
+					"title": "Birth Date",
+					"type": "string"
+				},
+
+				"Sex": {
+					"type": "string"
+				},
+
+				"PatientClass": {
+					"title": "Patient Class",
+					"type": "string"
+				},
+
+				"Race": {
+					"type": "object",
+					"properties": {
+						"Code": {
+							"type": "string"
+						},
+						"System": {
+							"type": "string"
+						},
+						"Display": {
+							"type": "string"
+						}
+					}
+				},
+
+				"Ethnicity": {
+					"type": "object",
+					"properties": {
+						"Code": {
+							"type": "string"
+						},
+						"System": {
+							"type": "string"
+						},
+						"Display": {
+							"type": "string"
+						}
+					}
+				},
+
+				"Preferred_Language": {
+					"title": "Preferred Language",
+          "type": "object",
+					"properties": {
+						"Code": {
+							"type": "string"
+						},
+						"System": {
+							"type": "string"
+						},
+						"Display": {
+							"type": "string"
+						}
+					}
+				},
+
+				"Occupation": {
+					"type": "string"
+				},
+
+				"Pregnant": {
+					"type": "boolean"
+				},
+				"Travel_History": {
+					"title": "Travel History",
+					"type": "array",
+					"items": {
+
+					}
+				},
+
+				"Insurance_Type": {
+					"title": "Insurance Type",
+					"type": "object",
+					"properties": {
+						"Code": {
+							"type": "string"
+						},
+						"System": {
+							"type": "string"
+						},
+						"Display": {
+							"type": "string"
+						}
+					}
+				},
+
+				"Immunization_History": {
+					"title": "Immunization History",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"Code": {
+								"type": "string"
+							},
+							"System": {
+								"type": "string"
+							},
+							"Date": {
+								"type": "string"
+							}
+						}
+					}
+				},
+
+				"Visit_DateTime": {
+					"title": "Visit Date",
+					"type": "string"
+				},
+
+				"Admission_DateTime": {
+					"title": "Admission Date",
+					"type": "string"
+				},
+
+				"Date_of_Onset": {
+					"title": "Date of Onset",
+					"type": "string"
+				},
+
+				"Symptoms": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"Code": {
+								"type": "string"
+							},
+							"System": {
+								"type": "string"
+							},
+							"Display": {
+								"type": "string"
+							}
+						}
+					}
+				},
+
+				"Lab_Order_Code": {
+					"title": "Lab Order",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"Code": {
+								"type": "string"
+							},
+							"System": {
+								"type": "string"
+							},
+							"Display": {
+								"type": "string"
+							},
+							"Laboratory_Results": {
+								"title": "Laboratory Results",
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"Value": {
+											"type": "string"
+										},
+										"Unit": {
+											"type": "object",
+											"properties": {
+												"Code": {
+													"type": "string"
+												},
+												"System": {
+													"type": "string"
+												},
+												"Display": {
+													"type": "string"
+												}
+											}
+										},
+										"Code": {
+											"type": "string"
+										},
+										"System": {
+											"type": "string"
+										},
+										"Display": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+
+				"Placer Order Code": {
+					"type": "string"
+				},
+
+				"Diagnosis": {
+					"type": "object",
+					"properties": {
+						"Code": {
+							"type": "string"
+						},
+						"System": {
+							"type": "string"
+						},
+						"Display": {
+							"type": "string"
+						},
+						"Date": {
+							"type": "string"
+						}
+					}
+				},
+				"Medication Provided": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"Code": {
+								"type": "string"
+							},
+							"System": {
+								"type": "string"
+							},
+							"Display": {
+								"type": "string"
+							},
+							"Dosage": {
+								"type": "object",
+								"properties": {
+									"Value": {
+										"type": "string"
+									},
+									"Unit": {
+										"type": "string"
+									}
+								}
+							},
+							"Date": {
+								"type": "string"
+							},
+							"Frequency": {
+								"type": "string"
+							}
+						}
+					}
+				},
+
+				"Death_Date": {
+					"title": "Death Date",
+					"type": "string"
+				},
+
+				"Date_Discharged": {
+					"title": "Date Discharged",
+					"type": "string"
+				},
+
+				"Trigger_Code": {
+					"title": "Trigger Code",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"Code": {
+								"type": "string"
+							},
+							"System": {
+								"type": "string"
+							},
+							"Display": {
+								"type": "string"
+							}
+						}
+					}
+				},
+
+				"Lab_Tests_Performed": {
+					"title": "Lab Tests Performed",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"Value": {
+								"type": "string"
+							},
+							"ResultStatus": {
+								"type": "string"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"Notes": {
+		"type": ["array", "null"],
+		"items": {
+			"type": ["string", "null"]
+		}
+	},
+	"default": {}
+}
