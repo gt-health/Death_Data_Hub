@@ -1,1 +1,4 @@
 theme: jekyll-theme-leap-day
+title: ReposeHub, CDC API Project for Death Records
+description: API Services for Getting and Distributing Decedent Data between Stakeholders.
+show_downloads: true
