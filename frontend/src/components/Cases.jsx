@@ -9,9 +9,11 @@ export default class Cases extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.staticData = require('../helpers/staticPatients.json');
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+  }
 
   componentWillMount() {}
 
@@ -31,18 +33,10 @@ export default class Cases extends React.Component {
       Header: 'Name',
       accessor: d => d.Patient.Name.given + " " + d.Patient.Name.family
     }, {
-      id: 'sendingApp',
-      Header: 'Sending Application',
-      accessor: d => d['Sending Application']
-    }, {
-      id: 'diagnosis',
-      Header: 'Diagnosis',
-      accessor: d => d.Patient.Diagnosis.Display
-    }, {
       id: 'actions',
       Header: 'Actions',
       accessor: d => d.Id,
-      Cell: row => <div><Link className="table-link" to={`/cases/${row.value}/view`}><button type="button" className="button is-link is-small is-outlined">View Case</button></Link>&nbsp;<Link className="table-link" to={`/cases/${row.value}/edit/patient`}><button type="button" className="button is-danger is-outlined is-small">Edit Case</button></Link></div>
+      Cell: row => <div><Link className="table-link" to={`/cases/${row.value}/view`}><button type="button" className="button is-link is-small is-outlined">View Case</button></Link></div>
     }];
 
     return (
@@ -81,7 +75,7 @@ export default class Cases extends React.Component {
         </nav>
         <div className="cases-table-wrapper">
           <ReactTable
-            data={this.props.cases}
+            data={this.staticData}
             columns={columns}
           />
         </div>

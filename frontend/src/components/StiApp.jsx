@@ -20,10 +20,8 @@ export default class StiApp extends Component {
       <div id="sti">
         {/*<Route path="/" component={Navbar}/>*/}
         <Switch>
-          <Route exact path="/" component={Search}/>
+          <Route exact path="/" component={Cases}/>
           <Route path="/cases/:caseId/view" component={CaseView}/>
-          {/*<Route path="/cases/:caseId/view" component={TestComp}/>*/}
-          <Route path="/cases/:caseId/edit" component={CaseEdit}/>
           <Route path="/cases" component={Cases}/>
         </Switch>
       </div>
