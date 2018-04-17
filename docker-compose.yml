@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+  
+  DeathRecordPuller:
+    build: ./DeathRecord_Puller/.
+    ports:
+      - "8282:8080"
+    command: ["/usr/local/bin/wait-for-postgres.sh","postgres","catalina.sh","run"]
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile-prod
+    ports:
+      - '80:80'
+    environment:
+      env_file: .env.production
