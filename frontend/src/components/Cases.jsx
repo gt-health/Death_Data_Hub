@@ -44,32 +44,12 @@ export default class Cases extends React.Component {
         <nav className="navbar is-transparent" id="topnav">
           <div className="navbar-brand">
             <a className="navbar-item" href="https://bulma.io">
-              STI CLIENT
+              DEATH RECORD CLIENT
             </a>
             <div className="navbar-burger burger" data-target="navbarExampleTransparentExample">
               <span></span>
               <span></span>
               <span></span>
-            </div>
-          </div>
-
-          <div className="navbar-menu">
-
-            <div className="navbar-end">
-              <div className="navbar-item">
-                <div className="field is-grouped">
-                  <p className="control">
-                    <Link to={`/`}>
-                      <button
-                        type="button"
-                        className="button is-medium"
-                      >
-                        Back to Search
-                      </button>
-                    </Link>
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
         </nav>

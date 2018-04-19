@@ -109,9 +109,6 @@ export default class Case extends React.Component {
                   <span>{this.props.case.raw.Patient.Name.family},&nbsp;{this.props.case.raw.Patient.Name.given}</span>
                   <span className="patient-sex-tag tag is-info">{this.props.case.raw.Patient.Sex}</span>
                 </div>
-                <div className="sending-app">
-                  <span className="tag is-danger">Sending Application:&nbsp;{this.props.case.raw['Sending Application']}</span>
-                </div>
               </div>
               <section className="section">
                 <div className="columns">
@@ -204,10 +201,6 @@ export default class Case extends React.Component {
                           <td>{this.props.case.raw.Patient.Ethnicity.Display}</td>
                         </tr>
                         <tr>
-                          <td>Insurance</td>
-                          <td>{this.props.case.raw.Patient.Insurance_Type.Display}</td>
-                        </tr>
-                        <tr>
                           <td>Name</td>
                           <td>{this.props.case.raw.Patient.Name.given}&nbsp;{this.props.case.raw.Patient.Name.family}</td>
                         </tr>
@@ -226,10 +219,6 @@ export default class Case extends React.Component {
                         <tr>
                           <td>Pregnant</td>
                           <td>{this.props.case.raw.Patient.Pregnant}</td>
-                        </tr>
-                        <tr>
-                          <td>Patient Class</td>
-                          <td>{this.props.case.raw.Patient.PatientClass}</td>
                         </tr>
                         <tr>
                           <td>Address</td>
@@ -264,33 +253,8 @@ export default class Case extends React.Component {
                 </div>
                 <div className="columns">
                   <div className="column is-one-third">
-                    <h3 className="title is-3">Travel History</h3>
-                    <div class="notification is-warning">
-                      No data to display.
-                    </div>
                   </div>
                   <div className="column is-one-third">
-                    <h3 className="title is-3">Immunization History</h3>
-                    {this.props.case.raw.Patient.Immunization_History.map(function(val, i){
-                      return (
-                        <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-                          <tbody>
-                            <tr>
-                              <td>Code</td>
-                              <td>{val.Code}</td>
-                            </tr>
-                            <tr>
-                              <td>Date</td>
-                              <td>{val.Date}</td>
-                            </tr>
-                            <tr>
-                              <td>System</td>
-                              <td>{val.System}</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      )
-                    })}
                   </div>
                   <div className="column is-one-third">
                     <h3 className="title is-3">Clinical Dates</h3>
@@ -345,42 +309,6 @@ export default class Case extends React.Component {
                           )
                         })}
                     </table>
-                  </div>
-                </div>
-                <div className="columns">
-                  <div className="column">
-                  <h4 className="title is-4">Lab Results</h4>
-                  {this.props.case.raw.Patient['Lab_Order_Code'].map(function(val, i){
-                    return (
-                      <div>
-                        <p class="lab-name"><strong>Lab:</strong>&nbsp;{val.Display}</p>
-                        <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-                          <thead>
-                            <tr>
-                              <th>Code</th>
-                              <th>Date</th>
-                              <th>Display</th>
-                              <th>System</th>
-                              <th>Value</th>
-                            </tr>
-                          </thead>
-                          {val.Laboratory_Results.map(function(val, i){
-                            return (
-                              <tbody>
-                                <tr>
-                                  <td>{val.Code}</td>
-                                  <td>{val.Date}</td>
-                                  <td>{val.Display}</td>
-                                  <td>{val.System}</td>
-                                  <td>{val.Value}{val.Unit.Display}</td>
-                                </tr>
-                              </tbody>
-                              )
-                            })}
-                        </table>
-                      </div>
-                      )
-                    })}
                   </div>
                 </div>
                 <div className="columns">
