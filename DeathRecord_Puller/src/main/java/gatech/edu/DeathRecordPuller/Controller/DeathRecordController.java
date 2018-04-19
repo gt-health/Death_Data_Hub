@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -73,7 +74,7 @@ import gatech.edu.STIECR.JSON.Provider;
 import gatech.edu.STIECR.JSON.utils.DateUtil;
 import gatech.edu.common.FHIR.client.ClientService;
 
-@CrossOrigin()
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class DeathRecordController {
 
@@ -97,7 +98,10 @@ public class DeathRecordController {
 		returnBundle.addEntry().setResource(patient).setFullUrl(patient.getId().getValue());
 		
 		getFHIRRecords(ecr, returnBundle, FHIRClient.getClient());
-		return new ResponseEntity<ECR>(ecr, returnStatus);
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Access-Control-Allow-Origin", "*");
+		responseHeaders.set("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+		return new ResponseEntity<ECR>(ecr, responseHeaders, returnStatus);
 	}
 
 	void getFHIRRecords(ECR ecr, Bundle fhirPatientBundle, IGenericClient client) {
