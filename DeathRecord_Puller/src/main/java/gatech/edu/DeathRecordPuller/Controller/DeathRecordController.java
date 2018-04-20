@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -74,7 +75,7 @@ import gatech.edu.STIECR.JSON.Provider;
 import gatech.edu.STIECR.JSON.utils.DateUtil;
 import gatech.edu.common.FHIR.client.ClientService;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin
 @RestController
 public class DeathRecordController {
 
@@ -99,8 +100,25 @@ public class DeathRecordController {
 		
 		getFHIRRecords(ecr, returnBundle, FHIRClient.getClient());
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.set("Access-Control-Allow-Origin", "*");
-		responseHeaders.set("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+		List<HttpMethod> allowedMethods = new ArrayList<HttpMethod>();
+		allowedMethods.add(HttpMethod.GET);
+		allowedMethods.add(HttpMethod.POST);
+		allowedMethods.add(HttpMethod.PUT);
+		allowedMethods.add(HttpMethod.DELETE);		
+		
+		List<String> allowedHeaders = new ArrayList<String>();
+		allowedHeaders.add("Content-Type");
+		allowedHeaders.add("Accept");
+		allowedHeaders.add("Accept-Encoding");
+		allowedHeaders.add("Accept-Language");
+		allowedHeaders.add("X-Requested-With");
+		allowedHeaders.add("remember-me");
+		
+		responseHeaders.setAccessControlAllowOrigin("*");
+		responseHeaders.setAccessControlAllowMethods(allowedMethods);
+		responseHeaders.setAccessControlAllowHeaders(allowedHeaders);
+		responseHeaders.setAccessControlAllowCredentials(true);
+		responseHeaders.setAccessControlMaxAge(3600L);
 		return new ResponseEntity<ECR>(ecr, responseHeaders, returnStatus);
 	}
 
