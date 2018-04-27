@@ -75,7 +75,7 @@ import gatech.edu.STIECR.JSON.Provider;
 import gatech.edu.STIECR.JSON.utils.DateUtil;
 import gatech.edu.common.FHIR.client.ClientService;
 
-@CrossOrigin
+@CrossOrigin()
 @RestController
 public class DeathRecordController {
 
@@ -90,7 +90,7 @@ public class DeathRecordController {
 	}
 
 	@RequestMapping(value = "/DeathRecord", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<ECR> DeathRecord(@RequestParam(value = "id") int id) {
+	public ResponseEntity<ECR> DeathRecord(@RequestParam(value = "id") String id) {
 		HttpStatus returnStatus = HttpStatus.OK;
 		ECR ecr = new ECR();
 		Bundle returnBundle = new Bundle();
