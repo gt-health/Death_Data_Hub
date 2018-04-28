@@ -166,7 +166,6 @@ public class DeathRecordController {
 
 			// Cycle through the bundle and linked patients
 			for (ca.uhn.fhir.model.dstu2.resource.Patient curPatient : linkedPatients) {
-
 				// Cycle through the creatable resources
 				for (RestResource resource : searchableResources) {
 
