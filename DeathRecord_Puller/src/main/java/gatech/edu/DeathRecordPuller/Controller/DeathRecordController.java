@@ -285,7 +285,8 @@ public class DeathRecordController {
 					updateParentGuardian(ecrParentGuardian, relatedPerson);
 				}
 			}
-			relatedPersons = FHIRClient.getNextPage(relatedPersons);
+			//relatedPersons = FHIRClient.getNextPage(relatedPersons);
+			relatedPersons = null;
 		} while (relatedPersons != null);
 	}
 
@@ -363,7 +364,8 @@ public class DeathRecordController {
 					}
 				}
 			}
-			medications = FHIRClient.getNextPage(medications);
+			//medications = FHIRClient.getNextPage(medications);
+			medications = null;
 		} while (medications != null);
 	}
 
@@ -448,7 +450,8 @@ public class DeathRecordController {
 					log.info("FAILED TO FIND MEDICATION CODE.");
 				}
 			}
-			medications = FHIRClient.getNextPage(medications);
+			//medications = FHIRClient.getNextPage(medications);
+			medications = null;
 		} while (medications != null);
 	}
 
@@ -552,7 +555,8 @@ public class DeathRecordController {
 					log.info("MEDICATIONORDER --- Didn't Match  " + ecrCode);
 				}
 			}
-			medications = FHIRClient.getNextPage(medications);
+			//medications = FHIRClient.getNextPage(medications);
+			medications = null;
 		} while (medications != null);
 	}
 
@@ -624,7 +628,8 @@ public class DeathRecordController {
 					}
 				}
 			}
-			medications = FHIRClient.getNextPage(medications);
+			//medications = FHIRClient.getNextPage(medications);
+			medications = null;
 		} while (medications != null);
 	}
 
@@ -650,7 +655,8 @@ public class DeathRecordController {
 					ecr.getPatient().getimmunizationHistory().add(ecrImmunization);
 				}
 			}
-			immunizations = FHIRClient.getNextPage(immunizations);
+			//immunizations = FHIRClient.getNextPage(immunizations);
+			immunizations = null;
 		} while (immunizations != null);
 	}
 
@@ -661,7 +667,8 @@ public class DeathRecordController {
 				Condition condition = (Condition) entry.getResource();
 				handleSingularCondition(ecr, condition);
 			}
-			conditions = FHIRClient.getNextPage(conditions);
+			//conditions = FHIRClient.getNextPage(conditions);
+			conditions = null;
 		} while (conditions != null);
 	}
 
@@ -755,7 +762,8 @@ public class DeathRecordController {
 							new CodeableConcept(coding.getCode(), coding.getSystem(), coding.getDisplay()));
 				}
 			}
-			claims = FHIRClient.getNextPage(claims);
+			//claims = FHIRClient.getNextPage(claims);
+			claims = null;
 		} while (claims != null);
 	}
 
@@ -777,7 +785,8 @@ public class DeathRecordController {
 					}
 				}
 			}
-			encounters = FHIRClient.getNextPage(encounters);
+			//encounters = FHIRClient.getNextPage(encounters);
+			encounters = null;
 		} while (encounters != null);
 	}
 
@@ -829,7 +838,8 @@ public class DeathRecordController {
 					labOrder.getLaboratory_Results().add(labResult);
 				}
 			}
-			observations = FHIRClient.getNextPage(observations);
+			//observations = FHIRClient.getNextPage(observations);
+			observations = null;
 		} while (observations != null);
 	}
 
@@ -848,7 +858,8 @@ public class DeathRecordController {
 				}
 
 			}
-			procedures = FHIRClient.getNextPage(procedures);
+			//procedures = FHIRClient.getNextPage(procedures);
+			procedures = null;
 		} while (procedures != null);
 	}
 
