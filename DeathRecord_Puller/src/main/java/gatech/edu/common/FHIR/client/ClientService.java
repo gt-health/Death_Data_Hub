@@ -106,7 +106,7 @@ public class ClientService {
 		log.info("Getting related person with patientId="+patientId);
 		Bundle results = client.search()
 				.forResource(RelatedPerson.class)
-				.where(RelatedPerson.PATIENT.hasId(patientId.getValue()))
+				.where(RelatedPerson.PATIENT.hasId(patientId.getIdPart()))
 				.returnBundle(Bundle.class)
 				.execute();
 		log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
@@ -187,7 +187,7 @@ public class ClientService {
 		log.info("Getting immunizations with patientId="+patientId);
 		Bundle results = client.search()
 				.forResource(Immunization.class)
-				.where(Immunization.PATIENT.hasId(patientId.getValue()))
+				.where(Immunization.PATIENT.hasId(patientId.getIdPart()))
 				.returnBundle(Bundle.class)
 				.execute();
 		log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
@@ -199,7 +199,7 @@ public class ClientService {
 		log.info("Getting procedures with patientId="+patientId);
 		Bundle results = client.search()
 				.forResource(Procedure.class)
-				.where(Procedure.PATIENT.hasId(patientId.getValue()))
+				.where(Procedure.PATIENT.hasId(patientId.getIdPart()))
 				.returnBundle(Bundle.class)
 				.execute();
 		log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
@@ -211,7 +211,7 @@ public class ClientService {
 		log.info("Getting encounters with patientId="+patientId);
 		Bundle results = client.search()
 				.forResource(Encounter.class)
-				.where(Encounter.PATIENT.hasId(patientId.getValue()))
+				.where(Encounter.PATIENT.hasId(patientId.getIdPart()))
 				.returnBundle(Bundle.class)
 				.execute();
 		log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
@@ -223,7 +223,7 @@ public class ClientService {
 		log.info("Getting conditions with patientId="+patientId);
 		Bundle results = client.search()
 				.forResource(Condition.class)
-				.where(Condition.PATIENT.hasId(patientId.getValue()))
+				.where(Condition.PATIENT.hasId(patientId.getIdPart()))
 				.returnBundle(Bundle.class)
 				.execute();
 		log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
@@ -235,7 +235,7 @@ public class ClientService {
 		log.info("Getting observations with patientId="+patientId);
 		Bundle results = client.search()
 				.forResource(Observation.class)
-				.where(Observation.PATIENT.hasId(patientId.getValue()))
+				.where(Observation.PATIENT.hasId(patientId.getIdPart()))
 				.returnBundle(Bundle.class)
 				.execute();
 		log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
@@ -247,22 +247,22 @@ public class ClientService {
 		log.info("Getting medications with patientId="+patientId);
 		Bundle resultsA = client.search()
 				.forResource(MedicationAdministration.class)
-				.where(MedicationAdministration.PATIENT.hasId(patientId.getValue()))
+				.where(MedicationAdministration.PATIENT.hasId(patientId.getIdPart()))
 				.returnBundle(Bundle.class)
 				.execute();
 		Bundle resultsD = client.search()
 				.forResource(MedicationDispense.class)
-				.where(MedicationDispense.PATIENT.hasId(patientId.getValue()))
+				.where(MedicationDispense.PATIENT.hasId(patientId.getIdPart()))
 				.returnBundle(Bundle.class)
 				.execute();
 		Bundle resultsO = client.search()
 				.forResource(MedicationOrder.class)
-				.where(MedicationOrder.PATIENT.hasId(patientId.getValue()))
+				.where(MedicationOrder.PATIENT.hasId(patientId.getIdPart()))
 				.returnBundle(Bundle.class)
 				.execute();
 		Bundle resultsM = client.search()
 				.forResource(MedicationStatement.class)
-				.where(MedicationStatement.PATIENT.hasId(patientId.getValue()))
+				.where(MedicationStatement.PATIENT.hasId(patientId.getIdPart()))
 				.returnBundle(Bundle.class)
 				.execute();
 		List<Bundle> medBundles = new ArrayList<Bundle>();
@@ -285,7 +285,7 @@ public class ClientService {
 		log.info("Getting medications administrations with patientId="+patientId);
 		Bundle returnBundle = client.search()
 				.forResource(MedicationAdministration.class)
-				.where(MedicationAdministration.PATIENT.hasId(patientId.getValue()))
+				.where(MedicationAdministration.PATIENT.hasId(patientId.getIdPart()))
 				.returnBundle(Bundle.class)
 				.execute();
 		log.info("Found :"+returnBundle.toString());
@@ -297,7 +297,7 @@ public class ClientService {
 		log.info("Getting medications dispenses with patientId="+patientId);
 		Bundle returnBundle = client.search()
 				.forResource(MedicationDispense.class)
-				.where(MedicationDispense.PATIENT.hasId(patientId.getValue()))
+				.where(MedicationDispense.PATIENT.hasId(patientId.getIdPart()))
 				.returnBundle(Bundle.class)
 				.execute();
 		log.info("Found :"+returnBundle.toString());
@@ -309,7 +309,7 @@ public class ClientService {
 		log.info("Getting medications orders with patientId="+patientId);
 		Bundle returnBundle = client.search()
 				.forResource(MedicationOrder.class)
-				.where(MedicationOrder.PATIENT.hasId(patientId.getValue()))
+				.where(MedicationOrder.PATIENT.hasId(patientId.getIdPart()))
 				.returnBundle(Bundle.class)
 				.execute();
 		log.info("Found :"+returnBundle.toString());
@@ -321,7 +321,7 @@ public class ClientService {
 		log.info("Getting medications orders with patientId="+patientId);
 		Bundle returnBundle = client.search()
 				.forResource(MedicationStatement.class)
-				.where(MedicationStatement.PATIENT.hasId(patientId.getValue()))
+				.where(MedicationStatement.PATIENT.hasId(patientId.getIdPart()))
 				.returnBundle(Bundle.class)
 				.execute();
 		log.info("Found :"+returnBundle.toString());
@@ -347,7 +347,7 @@ public class ClientService {
 		log.info("Getting claims for patientId="+patientId);
 		Bundle returnBundle = client.search()
 				.forResource(Claim.class)
-				.where(Claim.PATIENT.hasId(patientId.getValue()))
+				.where(Claim.PATIENT.hasId(patientId.getIdPart()))
 				.returnBundle(Bundle.class)
 				.execute();
 		log.info("Found :"+returnBundle.toString());
