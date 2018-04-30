@@ -42,7 +42,7 @@ export default class Case extends React.Component {
         <div className="case case-edit">
           <div className="sidebar">
             <div class="sidebar-header">
-              <span>STI CLIENT</span>
+              <span>DEATH RECORD CLIENT</span>
             </div>
             <ul className="nav nav-pills nav-stacked">
               <Link to={`${this.props.match.url}/provider`}>

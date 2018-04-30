@@ -32,7 +32,7 @@ export default class Case extends React.Component {
               <div className="container-fluid">
                 <div className="navbar-header">
                   <a className="navbar-brand" href="#">
-                    STI Client
+                    DEATH RECORD Client
                   </a>
                 </div>
               </div>
@@ -54,7 +54,7 @@ export default class Case extends React.Component {
             <nav className="navbar is-transparent" id="topnav">
               <div className="navbar-brand">
                 <a className="navbar-item" href="https://bulma.io">
-                  STI CLIENT
+                  DEATH RECORD CLIENT
                 </a>
                 <div className="navbar-burger burger" data-target="navbarExampleTransparentExample">
                   <span></span>
@@ -68,26 +68,6 @@ export default class Case extends React.Component {
                 <div className="navbar-end">
                   <div className="navbar-item">
                     <div className="field is-grouped">
-                      <p className="control">
-                        <Link to={`/cases/${this.props.match.params.caseId}/edit/provider`}>
-                          <button
-                            type="button"
-                            className="button is-danger is-medium is-outlined"
-                          >
-                            Edit Case
-                          </button>
-                        </Link>
-                      </p>
-                      <p className="control">
-                        <Link to={`/`}>
-                          <button
-                            type="button"
-                            className="button is-medium"
-                          >
-                            Search
-                          </button>
-                        </Link>
-                      </p>
                       <p className="control">
                         <Link to={`/cases`}>
                           <button

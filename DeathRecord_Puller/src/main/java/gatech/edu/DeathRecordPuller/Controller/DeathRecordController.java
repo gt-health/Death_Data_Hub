@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ca.uhn.fhir.model.api.ExtensionDt;
 import ca.uhn.fhir.model.api.IDatatype;
 import ca.uhn.fhir.model.dstu2.composite.CodeableConceptDt;
 import ca.uhn.fhir.model.dstu2.composite.CodingDt;
@@ -135,7 +136,7 @@ public class DeathRecordController {
 		List<RestResource> searchableResources = new ArrayList<RestResource>();
 		for (RestResource resource : availableResources) {
 			for (RestResourceInteraction interaction : resource.getInteraction()) {
-				if (TypeRestfulInteractionEnum.SEARCH_TYPE.getCode().equals(interaction.getCode())) {
+				if (TypeRestfulInteractionEnum.SEARCH_TYPE.getCode().equals(interaction.getCode()) || resource.getType().equals("Patient")) {
 					searchableResources.add(resource);
 					log.debug("ADDING RESOURCE TYPE= " + resource.getType());
 					break;
@@ -266,6 +267,18 @@ public class DeathRecordController {
 			ecr.getPatient().setdeathDate(DateUtil.dateToStdString(((DateDt) deceasedValue).getValue()));
 		}
 		ecr.getPatient().setsex(patient.getGender());
+		if(!patient.getAddress().isEmpty()) {
+			ecr.getPatient().setstreetAddress(HAPIFHIRUtil.addressToString(patient.getAddress().get(0)));	
+		}
+		//Support for extended race and ethnicity
+		for(ExtensionDt extension : patient.getUndeclaredExtensions()) {
+			if(extension.getUrl().equals("http://fhir.org/guides/argonaut/StructureDefinition/argo-race")) {
+				ecr.getPatient().setrace(new CodeableConcept(extension.getValue().toString(),"http://fhir.org/guides/argonaut/StructureDefinition/argo-race",extension.getValue().toString()));
+			}
+			if(extension.getUrl().equals("http://fhir.org/guides/argonaut/StructureDefinition/argo-ethnicity")) {
+				ecr.getPatient().setethnicity(new CodeableConcept(extension.getValue().toString(),"http://fhir.org/guides/argonaut/StructureDefinition/argo-ethnicity",extension.getValue().toString()));
+			}
+		}
 	}
 
 	void handleRelatedPersons(ECR ecr, IdDt IdDt) {
@@ -285,8 +298,7 @@ public class DeathRecordController {
 					updateParentGuardian(ecrParentGuardian, relatedPerson);
 				}
 			}
-			//relatedPersons = FHIRClient.getNextPage(relatedPersons);
-			relatedPersons = null;
+			relatedPersons = FHIRClient.getNextPage(relatedPersons);
 		} while (relatedPersons != null);
 	}
 
@@ -364,8 +376,7 @@ public class DeathRecordController {
 					}
 				}
 			}
-			//medications = FHIRClient.getNextPage(medications);
-			medications = null;
+			medications = FHIRClient.getNextPage(medications);
 		} while (medications != null);
 	}
 
@@ -450,8 +461,7 @@ public class DeathRecordController {
 					log.info("FAILED TO FIND MEDICATION CODE.");
 				}
 			}
-			//medications = FHIRClient.getNextPage(medications);
-			medications = null;
+			medications = FHIRClient.getNextPage(medications);
 		} while (medications != null);
 	}
 
@@ -555,8 +565,7 @@ public class DeathRecordController {
 					log.info("MEDICATIONORDER --- Didn't Match  " + ecrCode);
 				}
 			}
-			//medications = FHIRClient.getNextPage(medications);
-			medications = null;
+			medications = FHIRClient.getNextPage(medications);
 		} while (medications != null);
 	}
 
@@ -628,8 +637,7 @@ public class DeathRecordController {
 					}
 				}
 			}
-			//medications = FHIRClient.getNextPage(medications);
-			medications = null;
+			medications = FHIRClient.getNextPage(medications);
 		} while (medications != null);
 	}
 
@@ -655,8 +663,7 @@ public class DeathRecordController {
 					ecr.getPatient().getimmunizationHistory().add(ecrImmunization);
 				}
 			}
-			//immunizations = FHIRClient.getNextPage(immunizations);
-			immunizations = null;
+			immunizations = FHIRClient.getNextPage(immunizations);
 		} while (immunizations != null);
 	}
 
@@ -667,8 +674,7 @@ public class DeathRecordController {
 				Condition condition = (Condition) entry.getResource();
 				handleSingularCondition(ecr, condition);
 			}
-			//conditions = FHIRClient.getNextPage(conditions);
-			conditions = null;
+			conditions = FHIRClient.getNextPage(conditions);
 		} while (conditions != null);
 	}
 
@@ -762,8 +768,7 @@ public class DeathRecordController {
 							new CodeableConcept(coding.getCode(), coding.getSystem(), coding.getDisplay()));
 				}
 			}
-			//claims = FHIRClient.getNextPage(claims);
-			claims = null;
+			claims = FHIRClient.getNextPage(claims);
 		} while (claims != null);
 	}
 
@@ -785,8 +790,7 @@ public class DeathRecordController {
 					}
 				}
 			}
-			//encounters = FHIRClient.getNextPage(encounters);
-			encounters = null;
+			encounters = FHIRClient.getNextPage(encounters);
 		} while (encounters != null);
 	}
 
@@ -838,8 +842,7 @@ public class DeathRecordController {
 					labOrder.getLaboratory_Results().add(labResult);
 				}
 			}
-			//observations = FHIRClient.getNextPage(observations);
-			observations = null;
+			observations = FHIRClient.getNextPage(observations);
 		} while (observations != null);
 	}
 
@@ -858,8 +861,7 @@ public class DeathRecordController {
 				}
 
 			}
-			//procedures = FHIRClient.getNextPage(procedures);
-			procedures = null;
+			procedures = FHIRClient.getNextPage(procedures);
 		} while (procedures != null);
 	}
 

@@ -42,7 +42,7 @@ export default class Search extends React.Component {
         <nav className="navbar is-transparent" id="topnav">
           <div className="navbar-brand">
             <a className="navbar-item" href="https://bulma.io">
-              STI CLIENT
+              DEATH RECORD CLIENT
             </a>
             <div className="navbar-burger burger" data-target="navbarExampleTransparentExample">
               <span></span>
