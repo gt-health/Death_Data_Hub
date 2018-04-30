@@ -274,11 +274,11 @@ public class DeathRecordController {
 		for(ExtensionDt extension : patient.getUndeclaredExtensions()) {
 			if(extension.getUrl().equals("http://fhir.org/guides/argonaut/StructureDefinition/argo-race")) {
 				ExtensionDt valueExtension = extension.getExtension().get(0);
-				ecr.getPatient().setrace(new CodeableConcept(valueExtension.getValue().toString(),"http://fhir.org/guides/argonaut/StructureDefinition/argo-race",valueExtension.getValue().toString()));
+				ecr.getPatient().setrace(new CodeableConcept("http://fhir.org/guides/argonaut/StructureDefinition/argo-race",valueExtension.getValue().toString(),valueExtension.getValue().toString()));
 			}
 			if(extension.getUrl().equals("http://fhir.org/guides/argonaut/StructureDefinition/argo-ethnicity")) {
 				ExtensionDt valueExtension = extension.getExtension().get(0);
-				ecr.getPatient().setethnicity(new CodeableConcept(valueExtension.getValue().toString(),"http://fhir.org/guides/argonaut/StructureDefinition/argo-ethnicity",valueExtension.getValue().toString()));
+				ecr.getPatient().setethnicity(new CodeableConcept("http://fhir.org/guides/argonaut/StructureDefinition/argo-ethnicity",valueExtension.getValue().toString(),valueExtension.getValue().toString()));
 			}
 		}
 	}
