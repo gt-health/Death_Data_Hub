@@ -273,10 +273,12 @@ public class DeathRecordController {
 		//Support for extended race and ethnicity
 		for(ExtensionDt extension : patient.getUndeclaredExtensions()) {
 			if(extension.getUrl().equals("http://fhir.org/guides/argonaut/StructureDefinition/argo-race")) {
-				ecr.getPatient().setrace(new CodeableConcept(extension.getValue().toString(),"http://fhir.org/guides/argonaut/StructureDefinition/argo-race",extension.getValue().toString()));
+				ExtensionDt valueExtension = extension.getExtension().get(0);
+				ecr.getPatient().setrace(new CodeableConcept(valueExtension.getValue().toString(),"http://fhir.org/guides/argonaut/StructureDefinition/argo-race",valueExtension.getValue().toString()));
 			}
 			if(extension.getUrl().equals("http://fhir.org/guides/argonaut/StructureDefinition/argo-ethnicity")) {
-				ecr.getPatient().setethnicity(new CodeableConcept(extension.getValue().toString(),"http://fhir.org/guides/argonaut/StructureDefinition/argo-ethnicity",extension.getValue().toString()));
+				ExtensionDt valueExtension = extension.getExtension().get(0);
+				ecr.getPatient().setethnicity(new CodeableConcept(valueExtension.getValue().toString(),"http://fhir.org/guides/argonaut/StructureDefinition/argo-ethnicity",valueExtension.getValue().toString()));
 			}
 		}
 	}
