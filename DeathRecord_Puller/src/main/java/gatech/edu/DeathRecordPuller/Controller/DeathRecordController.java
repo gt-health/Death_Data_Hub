@@ -659,7 +659,9 @@ public class DeathRecordController {
 				if (immunization != null && StringUtils.isNotBlank(immunization.getText().getDivAsString())) {
 					ecrImmunization.setCode(immunization.getText().getDivAsString());
 				}
-				ecrImmunization.setDate(DateUtil.dateToStdString(immunization.getDate()));
+				if(immunization.getDate() != null) {
+					ecrImmunization.setDate(DateUtil.dateToStdString(immunization.getDate()));
+				}
 				if (!ecr.getPatient().getimmunizationHistory().contains(ecrImmunization)) {
 					log.info("Adding Immunization For " + idDt.getValueAsString());
 					ecr.getPatient().getimmunizationHistory().add(ecrImmunization);
