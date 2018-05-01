@@ -409,6 +409,14 @@ public class ClientService {
 		this.serverBaseUrl = serverBaseUrl;
 	}
 	
+	public String getVAServerBaseUrl() {
+		return VAserverBaseUrl;
+	}
+
+	public void setVAServerBaseUrl(String serverBaseUrl) {
+		this.VAserverBaseUrl = serverBaseUrl;
+	}
+	
 	public IGenericClient getClient() {
 		return client;
 	}
