@@ -44,6 +44,7 @@ public class ClientService {
 	private static final Logger log = LoggerFactory.getLogger(ClientService.class);
 	
 	protected String serverBaseUrl;
+	protected String VAserverBaseUrl;
 	protected static final FhirContext ctx = FhirContext.forDstu2();
 	protected IGenericClient client;
 	//TODO: Figure out how to search for source_ids, not new ids.
@@ -64,6 +65,10 @@ public class ClientService {
 	
 	public void initializeClient() {
 		client = ctx.newRestfulGenericClient(serverBaseUrl);
+	}
+	
+	public void initializeVaClient() {
+		client = ctx.newRestfulGenericClient(VAserverBaseUrl);
 	}
 	
 	public List<RestResource> getConformanceStatementResources() {

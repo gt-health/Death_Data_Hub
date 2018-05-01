@@ -96,6 +96,12 @@ public class DeathRecordController {
 		ECR ecr = new ECR();
 		Bundle returnBundle = new Bundle();
 		IdDt idType = new IdDt(id);
+		if(id.equals("185602V825292") || id.equals("185603V825293") || id.equals("185604V825294") || id.equals("185605V825295")) {
+			FHIRClient.initializeVaClient();
+		}
+		else {
+			FHIRClient.initializeClient();
+		}
 		Patient patient = FHIRClient.getPatient(idType);
 		returnBundle.addEntry().setResource(patient).setFullUrl(patient.getId().getValue());
 		
@@ -667,7 +673,8 @@ public class DeathRecordController {
 					ecr.getPatient().getimmunizationHistory().add(ecrImmunization);
 				}
 			}
-			immunizations = FHIRClient.getNextPage(immunizations);
+			//immunizations = FHIRClient.getNextPage(immunizations);
+			immunizations = null;
 		} while (immunizations != null);
 	}
 
@@ -725,25 +732,22 @@ public class DeathRecordController {
 			log.info("CONDITION --- Trying coding: " + coding.getDisplay());
 			CodeableConcept concept = FHIRCoding2ECRConcept(coding);
 			log.info("CONDITION --- Translated to ECRconcept:" + concept.toString());
-			if ((ecr.getPatient().getDiagnosis() == null
-					|| !ecr.getPatient().getDiagnosis().getCode().equals(concept.getcode()))) {
-				log.info("CONDITION ---DIAGNOSIS MATCH!" + concept.toString());
-				Diagnosis updatedDiagnosis = new Diagnosis();
-				updatedDiagnosis.setCode(concept.getcode());
-				updatedDiagnosis.setDisplay(concept.getdisplay());
-				updatedDiagnosis.setSystem(concept.getsystem());
-				if ((ecrDate == null && onsetDate != null)
-						|| (ecrDate != null && onsetDate != null && onsetDate.before(ecrDate))) {
-					log.info("CONDITION --- Found onset date of: " + onsetDate);
-					log.info("CONDITION --- Eariler date than previously found. Replacing patient onset date.");
-					ecr.getPatient().setdateOfOnset(DateUtil.dateTimeToStdString(onsetDate));
-					updatedDiagnosis.setDate(DateUtil.dateTimeToStdString(onsetDate));
-				} else {
-					updatedDiagnosis.setDate(ecr.getPatient().getdateOfOnset());
-				}
-				ecr.getPatient().setDiagnosis(updatedDiagnosis);
-				return;
+			log.info("CONDITION ---DIAGNOSIS MATCH!" + concept.toString());
+			Diagnosis updatedDiagnosis = new Diagnosis();
+			updatedDiagnosis.setCode(concept.getcode());
+			updatedDiagnosis.setDisplay(concept.getdisplay());
+			updatedDiagnosis.setSystem(concept.getsystem());
+			if ((ecrDate == null && onsetDate != null)
+					|| (ecrDate != null && onsetDate != null && onsetDate.before(ecrDate))) {
+				log.info("CONDITION --- Found onset date of: " + onsetDate);
+				log.info("CONDITION --- Eariler date than previously found. Replacing patient onset date.");
+				ecr.getPatient().setdateOfOnset(DateUtil.dateTimeToStdString(onsetDate));
+				updatedDiagnosis.setDate(DateUtil.dateTimeToStdString(onsetDate));
+			} else {
+				updatedDiagnosis.setDate(ecr.getPatient().getdateOfOnset());
 			}
+			ecr.getPatient().getDiagnosis().add(updatedDiagnosis);
+			return;
 		}
 		handleSingularConditionConceptCode(ecr, code);
 		// TODO: distinguish between symptom list and diagnosis list here
