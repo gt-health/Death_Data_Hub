@@ -96,7 +96,7 @@ public class DeathRecordController {
 		ECR ecr = new ECR();
 		Bundle returnBundle = new Bundle();
 		IdDt idType = new IdDt(id);
-		if(id.equals("185602V825292") || id.equals("185603V825293") || id.equals("185604V825294") || id.equals("185605V825295")) {
+		if(id.equals("185601V825290") || id.equals("185602V825292") || id.equals("185603V825293") || id.equals("185604V825294") || id.equals("185605V825295")) {
 			FHIRClient.initializeVaClient();
 		}
 		else {
