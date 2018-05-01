@@ -44,7 +44,8 @@ public class ClientService {
 	private static final Logger log = LoggerFactory.getLogger(ClientService.class);
 	
 	protected String serverBaseUrl;
-	protected String VAserverBaseUrl;
+	protected String vAserverBaseUrl;
+	protected String currentBaseUrl;
 	protected static final FhirContext ctx = FhirContext.forDstu2();
 	protected IGenericClient client;
 	//TODO: Figure out how to search for source_ids, not new ids.
@@ -65,10 +66,12 @@ public class ClientService {
 	
 	public void initializeClient() {
 		client = ctx.newRestfulGenericClient(serverBaseUrl);
+		currentBaseUrl=serverBaseUrl;
 	}
 	
 	public void initializeVaClient() {
-		client = ctx.newRestfulGenericClient(VAserverBaseUrl);
+		client = ctx.newRestfulGenericClient(vAserverBaseUrl);
+		currentBaseUrl=vAserverBaseUrl;
 	}
 	
 	public List<RestResource> getConformanceStatementResources() {
@@ -81,7 +84,7 @@ public class ClientService {
 	}
 	
 	public Bundle getPatientUsingIdentifierAndOrganization(String identifier,String organization) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting everything with identifier="+identifier+" and organization="+organization);
 		Bundle results = client.search()
 				.forResource(Patient.class)
@@ -95,7 +98,7 @@ public class ClientService {
 	}
 	
 	public Bundle getRelatedPersons(String personName) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting related person with personName="+personName);
 		Bundle results = client.search()
 				.forResource(RelatedPerson.class)
@@ -107,7 +110,7 @@ public class ClientService {
 	}
 	
 	public Bundle getRelatedPersons(IdDt patientId) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting related person with patientId="+patientId);
 		Bundle results = client.search()
 				.forResource(RelatedPerson.class)
@@ -119,7 +122,7 @@ public class ClientService {
 	}
 	
 	public Bundle getPatient(String personName) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting patient with personName="+personName);
 		Bundle results = client.search()
 				.forResource(Patient.class)
@@ -131,7 +134,7 @@ public class ClientService {
 	}
 	
 	public Patient getPatient(IdDt patientId) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting patient with patientId="+patientId);
 		Patient results = client.read()
 				.resource(Patient.class)
@@ -142,7 +145,7 @@ public class ClientService {
 	}
 	
 	public Bundle getPatient(Name personName) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting patient with personName="+personName);
 		Bundle results = client.search()
 				.forResource(Patient.class)
@@ -155,7 +158,7 @@ public class ClientService {
 	}
 	
 	public Bundle getPatientByIdentifier(String identifierSystem, String identifierValue) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting patient by identifier with identifierSystem="+ identifierSystem+ " identifierValue="+identifierValue);
 		Bundle results = client.search()
 				.forResource(Patient.class)
@@ -167,7 +170,7 @@ public class ClientService {
 	}
 	
 	public Practitioner getPractictioner(IdDt practitionerId) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting practictioner with practitionerId="+practitionerId);
 		Practitioner results = client.read()
 				.resource(Practitioner.class)
@@ -188,7 +191,7 @@ public class ClientService {
 	}*/
 	
 	public Bundle getImmunizations(IdDt patientId) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting immunizations with patientId="+patientId);
 		Bundle results = client.search()
 				.forResource(Immunization.class)
@@ -200,7 +203,7 @@ public class ClientService {
 	}
 	
 	public Bundle getProcedures(IdDt patientId) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting procedures with patientId="+patientId);
 		Bundle results = client.search()
 				.forResource(Procedure.class)
@@ -212,7 +215,7 @@ public class ClientService {
 	}
 	
 	public Bundle getEncounters(IdDt patientId) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting encounters with patientId="+patientId);
 		Bundle results = client.search()
 				.forResource(Encounter.class)
@@ -224,7 +227,7 @@ public class ClientService {
 	}
 	
 	public Bundle getConditions(IdDt patientId) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting conditions with patientId="+patientId);
 		Bundle results = client.search()
 				.forResource(Condition.class)
@@ -236,7 +239,7 @@ public class ClientService {
 	}
 	
 	public Bundle getObservations(IdDt patientId) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting observations with patientId="+patientId);
 		Bundle results = client.search()
 				.forResource(Observation.class)
@@ -248,7 +251,7 @@ public class ClientService {
 	}
 	
 	public Bundle getMedications(IdDt patientId) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting medications with patientId="+patientId);
 		Bundle resultsA = client.search()
 				.forResource(MedicationAdministration.class)
@@ -286,7 +289,7 @@ public class ClientService {
 	}
 	
 	public Bundle getMedicationAdministrations(IdDt patientId) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting medications administrations with patientId="+patientId);
 		Bundle returnBundle = client.search()
 				.forResource(MedicationAdministration.class)
@@ -298,7 +301,7 @@ public class ClientService {
 	}
 	
 	public Bundle getMedicationDispenses(IdDt patientId) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting medications dispenses with patientId="+patientId);
 		Bundle returnBundle = client.search()
 				.forResource(MedicationDispense.class)
@@ -310,7 +313,7 @@ public class ClientService {
 	}
 	
 	public Bundle getMedicationOrders(IdDt patientId) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting medications orders with patientId="+patientId);
 		Bundle returnBundle = client.search()
 				.forResource(MedicationOrder.class)
@@ -322,7 +325,7 @@ public class ClientService {
 	}
 	
 	public Bundle getMedicationStatements(IdDt patientId) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting medications orders with patientId="+patientId);
 		Bundle returnBundle = client.search()
 				.forResource(MedicationStatement.class)
@@ -336,7 +339,7 @@ public class ClientService {
 	//NOT A Useful patient-centric call
 	//Can search by provider group however
 	public Bundle getCoverages(IdDt providerId) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting coverages for providerId="+providerId);
 		Bundle returnBundle = client.search()
 				.forResource(Coverage.class)
@@ -348,7 +351,7 @@ public class ClientService {
 	}
 	
 	public Bundle getClaims(IdDt patientId) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting claims for patientId="+patientId);
 		Bundle returnBundle = client.search()
 				.forResource(Claim.class)
@@ -360,7 +363,7 @@ public class ClientService {
 	}
 	
 	public Condition getConditionById(IdDt conditionId) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting condition with id="+conditionId);
 
 		Condition returnCondition = client.read()
@@ -372,7 +375,7 @@ public class ClientService {
 	}
 	
 	public Coverage getCoverageById(IdDt coverageId) {
-		log.info("serverBaseUrl="+serverBaseUrl);
+		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting coverage with id="+coverageId);
 
 		Coverage returnCoverage = client.read()
@@ -410,11 +413,11 @@ public class ClientService {
 	}
 	
 	public String getVAServerBaseUrl() {
-		return VAserverBaseUrl;
+		return vAserverBaseUrl;
 	}
 
 	public void setVAServerBaseUrl(String serverBaseUrl) {
-		this.VAserverBaseUrl = serverBaseUrl;
+		this.vAserverBaseUrl = serverBaseUrl;
 	}
 	
 	public IGenericClient getClient() {
