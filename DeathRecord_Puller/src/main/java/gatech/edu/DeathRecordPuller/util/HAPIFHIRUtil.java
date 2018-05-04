@@ -65,4 +65,16 @@ public class HAPIFHIRUtil {
 		returnString.concat(address.getPostalCode());
 		return returnString;
 	}
+	
+	public static AddressDt stringToAddress(String string) {
+		AddressDt returnAddress = new AddressDt();
+		int lineEndIndex = string.indexOf(", ");
+		returnAddress.addLine(string.substring(0, lineEndIndex));
+		string = string.substring(lineEndIndex+2);
+		int stateEndIndex = string.indexOf(" ");
+		returnAddress.setState(string.substring(0,stateEndIndex));
+		string = string.substring(stateEndIndex+1);
+		returnAddress.setPostalCode(string); //End of formatted string
+		return returnAddress;
+	}
 }

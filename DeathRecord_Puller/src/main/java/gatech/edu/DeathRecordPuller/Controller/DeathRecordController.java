@@ -11,22 +11,32 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.JsonObject;
 
 import ca.uhn.fhir.model.api.ExtensionDt;
 import ca.uhn.fhir.model.api.IDatatype;
+import ca.uhn.fhir.model.dstu2.composite.AddressDt;
 import ca.uhn.fhir.model.dstu2.composite.CodeableConceptDt;
 import ca.uhn.fhir.model.dstu2.composite.CodingDt;
 import ca.uhn.fhir.model.dstu2.composite.ContactPointDt;
 import ca.uhn.fhir.model.dstu2.composite.HumanNameDt;
+import ca.uhn.fhir.model.dstu2.composite.IdentifierDt;
 import ca.uhn.fhir.model.dstu2.composite.PeriodDt;
 import ca.uhn.fhir.model.dstu2.composite.QuantityDt;
 import ca.uhn.fhir.model.dstu2.composite.RangeDt;
@@ -62,6 +72,7 @@ import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.model.primitive.StringDt;
 import ca.uhn.fhir.model.primitive.TimeDt;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import edu.emory.mathcs.backport.java.util.Collections;
 import gatech.edu.DeathRecordPuller.util.HAPIFHIRUtil;
 import gatech.edu.STIECR.JSON.CodeableConcept;
 import gatech.edu.STIECR.JSON.Diagnosis;
@@ -104,14 +115,27 @@ public class DeathRecordController {
 		}
 		Patient patient = FHIRClient.getPatient(idType);
 		returnBundle.addEntry().setResource(patient).setFullUrl(patient.getId().getValue());
+		RestTemplate EDRSEndpoint = new RestTemplate();
+		ObjectMapper objectMapper = new ObjectMapper();
+		ObjectNode body = objectMapper.createObjectNode();
 		
-		getFHIRRecords(ecr, returnBundle, FHIRClient.getClient());
+		getFHIRRecords(ecr, returnBundle, FHIRClient.getClient(),body);
+		
+		handleEDRSBody(ecr,body);
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAcceptCharset(Collections.singletonList("UTF-8"));
+		HttpEntity<ObjectNode> entity = new HttpEntity<ObjectNode>(body, headers);
+		EDRSEndpoint.postForObject("http://deathdatahub1.hdap.gatech.edu:3000", body, JsonObject.class);
+		
 		HttpHeaders responseHeaders = new HttpHeaders();
 		List<HttpMethod> allowedMethods = new ArrayList<HttpMethod>();
 		allowedMethods.add(HttpMethod.GET);
 		allowedMethods.add(HttpMethod.POST);
 		allowedMethods.add(HttpMethod.PUT);
 		allowedMethods.add(HttpMethod.DELETE);		
+		
 		
 		List<String> allowedHeaders = new ArrayList<String>();
 		allowedHeaders.add("Content-Type");
@@ -129,7 +153,7 @@ public class DeathRecordController {
 		return new ResponseEntity<ECR>(ecr, responseHeaders, returnStatus);
 	}
 
-	void getFHIRRecords(ECR ecr, Bundle fhirPatientBundle, IGenericClient client) {
+	void getFHIRRecords(ECR ecr, Bundle fhirPatientBundle, IGenericClient client,ObjectNode body) {
 
 		// Patient ecrPatient = ecr.getPatient();
 		log.info("Handling a patient bundle with total patients:" + fhirPatientBundle.getTotal());
@@ -209,7 +233,7 @@ public class DeathRecordController {
 						handleObservation(ecr, curPatient.getId());
 						break;
 					case "Patient":
-						handlePatient(ecr, curPatient);
+						handlePatient(ecr, curPatient,body);
 						break;
 					case "Practictioner":
 						for (ResourceReferenceDt practitionerRef : patient.getCareProvider()) {
@@ -254,7 +278,7 @@ public class DeathRecordController {
 		}
 	}
 
-	void handlePatient(ECR ecr, ca.uhn.fhir.model.dstu2.resource.Patient patient) {
+	void handlePatient(ECR ecr, ca.uhn.fhir.model.dstu2.resource.Patient patient,ObjectNode body) {
 		log.info("PATIENT -- Working with patient:"+ patient.toString());
 		if(!patient.getName().isEmpty()) {
 			log.info("PATIENT -- Patient name found!");
@@ -285,6 +309,13 @@ public class DeathRecordController {
 			if(extension.getUrl().equals("http://fhir.org/guides/argonaut/StructureDefinition/argo-ethnicity")) {
 				ExtensionDt valueExtension = extension.getExtension().get(0);
 				ecr.getPatient().setethnicity(new CodeableConcept("http://fhir.org/guides/argonaut/StructureDefinition/argo-ethnicity",valueExtension.getValue().toString(),valueExtension.getValue().toString()));
+			}
+		}
+		for(IdentifierDt identifier : patient.getIdentifier()) {
+			if(identifier.getSystem().equals("http://hl7.org/fhir/sid/us-ssn")) {
+				body.put("snn.snn1", identifier.getValue().substring(0, 3));
+				body.put("snn.snn2", identifier.getValue().substring(3, 2));
+				body.put("snn.snn3", identifier.getValue().substring(5, 4));
 			}
 		}
 	}
@@ -884,6 +915,81 @@ public class DeathRecordController {
 		}
 	}
 
+	public void handleEDRSBody(ECR ecr, ObjectNode body) {
+		body.put("armedForcesService.amredForces.Service", "No");
+		body.put("autopsyAvailableToCompleteCauseOfDeath.autopsyAvailableToCompleteCauseOfDeath", "No");
+		body.put("autopsyPerformed.autopsyPerformed", "No");
+		body.put("certifierType.certifierType", "Physician (Pronouncer and Certifier)");
+		
+		body.put("cod.immediate", ecr.getPatient().getDiagnosis().get(0) == null ? "Example Immediate COD" : ecr.getPatient().getDiagnosis().get(0).getDisplay());
+		body.put("cod.immediateInt","minutes");
+		body.put("cod.under1", ecr.getPatient().getDiagnosis().get(1) == null ? "Example Immediate COD" : ecr.getPatient().getDiagnosis().get(1).getDisplay());
+		body.put("cod.under1Int","2 hours");
+		body.put("cod.under1", ecr.getPatient().getDiagnosis().get(2) == null ? "Example Immediate COD" : ecr.getPatient().getDiagnosis().get(2).getDisplay());
+		body.put("cod.under2Int","6 months");
+		body.put("cod.under1", ecr.getPatient().getDiagnosis().get(3) == null ? "Example Immediate COD" : ecr.getPatient().getDiagnosis().get(3).getDisplay());
+		body.put("cod.under3Int","15 years");
+		
+		body.put("dateOfBirth.dateOfBirth", ecr.getPatient().getDiagnosis().get(3) == null ? "Example Immediate COD" : ecr.getPatient().getbirthDate().isEmpty() ? "1970-01-01" : ecr.getPatient().getbirthDate());
+		body.put("dateOfBirth.dateOfDeath", "2018-05-04");
+		body.put("datePronouncedDead.datePronouncedDead", "2018-05-04");
+		body.put("deathResultedFromInjuryAtWork.deathResultedFromInjuryAtWork", "No");
+		
+		AddressDt address = HAPIFHIRUtil.stringToAddress(ecr.getPatient().getstreetAddress());
+		body.put("decedentAddress.city", address.getCity().isEmpty() ? "1 Example Street" : address.getCity());
+		body.put("decedentAddress.state",  address.getState().isEmpty() ? "Massachusetts" : address.getState());
+		body.put("decedentAddress.zip",  address.getPostalCode().isEmpty() ? "02101" : address.getPostalCode());
+		body.put("decedentName.firstName", ecr.getPatient().getname().getgiven());
+		body.put("decedentName.lastName", ecr.getPatient().getname().getfamily());
+		body.put("decedentName.middleName", "Middle");
+		
+		body.put("detailsOfInjury", "Example details of injury");
+		body.put("detailsOfInjuryDate.detailsOfInjuryDate", "2018-05-04");
+		body.put("detailsOfInjuryLocation.city", address.getCity().isEmpty() ? "Boston" : address.getCity());
+		body.put("detailsOfInjuryLocation.state", address.getState().isEmpty() ? "Massachusetts" : address.getState());
+		body.put("detailsOfInjuryLocation.street", address.getLine().get(0).isEmpty() ? "1 Example Street" : address.getLine().get(0).toString());
+		body.put("detailsOfInjuryLocation.zip", address.getPostalCode().isEmpty() ? "02101" : address.getPostalCode());
+		body.put("detailsOfInjuryTime.detailsOfInjuryTime", "12:00");
+		body.put("didTobaccoUseContributeToDeath.didTobaccoUseContributeToDeath", "No");
+		body.put("education.education", "High School Diploma");
+		body.put("FuneralFacility.city", "Boston");
+		body.put("FuneralFacility.name", "Example Funeral Home");
+		body.put("FuneralFacility.state", "Massachusetts");
+		body.put("FuneralFacility.street", "2 Example Street");
+		body.put("FuneralFacility.zip", "02101");
+		body.put("hispanicOrigin.hispanicOrigin.option", ecr.getPatient().getethnicity().getdisplay().equals("Hispanic") ? "Yes" : "No");
+		body.put("hispanicOrigin.hispanicOrigin.specify", "");
+		body.put("ifTransInjury.ifTransInjury", "Other");
+		body.put("kindOfBuisness.kindOfBusiness", "Example kind of business");
+		body.put("locationOfDeath.city", address.getCity().isEmpty() ? "1 Example Street" : address.getCity());
+		body.put("locationOfDeath.name", "Residence");
+		body.put("locationOfDeath.state", address.getState().isEmpty() ? "Massachusetts" : address.getState());
+		body.put("locationOfDeath.street", address.getLine().get(0).isEmpty() ? "1 Example Street" : address.getLine().get(0).toString());
+		body.put("locationOfDeath.zip", address.getPostalCode().isEmpty() ? "02101" : address.getPostalCode());
+		body.put("mannerOfDeath.mannerOfDeath", "Accident");
+		body.put("maritalStatus.maritalStatue", "Never married");
+		body.put("meOrCoronerContacted.meOrCoronerContacted", "No");
+		body.put("methodOfDisposition.methodOfDisposition", "Burial");
+		body.put("motherName.lastName", ecr.getPatient().getname().getfamily());
+		body.put("personCompletingCauseOfDeathAddress.city", "Bedford");
+		body.put("personCompletingCauseOfDeathAddress.state", "Massachusetts");
+		body.put("personCompletingCauseOfDeathAddress.street", "100 Example St.");
+		body.put("personCompletingCauseOfDeathAddress.zip", "01730");
+		body.put("personCompletingCauseOfDeathName.firstName", "Example");
+		body.put("personCompletingCauseOfDeathName.lastName", "Doctor");
+		body.put("personCompletingCauseOfDeathName.middleName", "Middle");
+		body.put("placeOfBirth.city", "Boston");
+		body.put("placeOfBirth.country", "United States");
+		body.put("placeOfBirth.state", "Massachusetts");
+		body.put("pregnancyStatus.pregnanyStatus", "Not pregnant within past year");
+		body.put("race.race.option", "Known");
+		body.put("race.race.specify", "[\\\"White\\\",\\\"Native Hawaiian or Other Pacific Islander\\\",\\\"Asian\\\",\\\"American Indian or Alaskan Native\\\",\\\"Black or African American\\\"]");
+		body.put("sex.sex", ecr.getPatient().getsex());
+		//ssn allready taken care of
+		body.put("timeOfDeath", "12:00");
+		body.put("timePronouncedDead.timePronouncedDead", "12:00");
+		body.put("usualOccupation.usualOccupation", "Example usual occupation");
+	}
 	public static CodeableConcept FHIRCoding2ECRConcept(CodingDt fhirCoding) {
 		CodeableConcept ecrConcept = new CodeableConcept();
 		ecrConcept.setcode(fhirCoding.getCode());
