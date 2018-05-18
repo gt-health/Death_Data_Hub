@@ -72,11 +72,6 @@
     	<artifactId>hapi-fhir-structures-dstu3</artifactId>
     	<version>${fhir.version}</version>
     </dependency>
-    <dependency>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-maven-plugin</artifactId>
-        <version>9.4.0.M0</version>
-    </dependency>
     
   </dependencies>
   
@@ -93,19 +88,5 @@
   	</repository>
   </repositories>
   
-  <build>
-
-		<!-- The following is not required for the application to build, but allows 
-			you to test it by issuing "mvn jetty:run" from the command line. -->
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-maven-plugin</artifactId>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
-	
   <packaging>war</packaging>
 </project>
