@@ -6,7 +6,7 @@
   <artifactId>DeathRecord</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
-  <name>FHIR_Controller</name>
+  <name>DeathRecord_Controller</name>
   <url>http://maven.apache.org</url>
 
 	<parent>

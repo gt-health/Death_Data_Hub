@@ -119,15 +119,15 @@ public class DeathRecordController {
 		ObjectMapper objectMapper = new ObjectMapper();
 		ObjectNode body = objectMapper.createObjectNode();
 		
-		getFHIRRecords(ecr, returnBundle, FHIRClient.getClient(),body);
+		getFHIRRecords(ecr, returnBundle, FHIRClient.getClient());
 		
-		handleEDRSBody(ecr,body);
+		/*handleEDRSBody(ecr,body);
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setAcceptCharset(Collections.singletonList("UTF-8"));
 		HttpEntity<ObjectNode> entity = new HttpEntity<ObjectNode>(body, headers);
-		EDRSEndpoint.postForObject("http://deathdatahub1.hdap.gatech.edu:3000", body, JsonObject.class);
+		EDRSEndpoint.postForObject("http://deathdatahub1.hdap.gatech.edu:3000", body, JsonObject.class);*/
 		
 		HttpHeaders responseHeaders = new HttpHeaders();
 		List<HttpMethod> allowedMethods = new ArrayList<HttpMethod>();
@@ -153,15 +153,10 @@ public class DeathRecordController {
 		return new ResponseEntity<ECR>(ecr, responseHeaders, returnStatus);
 	}
 
-	void getFHIRRecords(ECR ecr, Bundle fhirPatientBundle, IGenericClient client,ObjectNode body) {
+	void getFHIRRecords(ECR ecr, Bundle fhirPatientBundle, IGenericClient client) {
 
 		// Patient ecrPatient = ecr.getPatient();
 		log.info("Handling a patient bundle with total patients:" + fhirPatientBundle.getTotal());
-		// Build Resources that are creatable.
-		// WHY DO WE CARE OF RESOURCES ARE CREATABLE? OUR FHIR SERVER DOESN'T SUPPORT
-		// CREATION - HIE - READONLY.
-		// Doing this once here since this should all be from the same source FHIR
-		// service, right?
 		List<RestResource> availableResources = FHIRClient.getConformanceStatementResources();
 		List<RestResource> searchableResources = new ArrayList<RestResource>();
 		for (RestResource resource : availableResources) {
@@ -233,7 +228,7 @@ public class DeathRecordController {
 						handleObservation(ecr, curPatient.getId());
 						break;
 					case "Patient":
-						handlePatient(ecr, curPatient,body);
+						handlePatient(ecr, curPatient);
 						break;
 					case "Practictioner":
 						for (ResourceReferenceDt practitionerRef : patient.getCareProvider()) {
@@ -278,7 +273,7 @@ public class DeathRecordController {
 		}
 	}
 
-	void handlePatient(ECR ecr, ca.uhn.fhir.model.dstu2.resource.Patient patient,ObjectNode body) {
+	void handlePatient(ECR ecr, ca.uhn.fhir.model.dstu2.resource.Patient patient) {
 		log.info("PATIENT -- Working with patient:"+ patient.toString());
 		if(!patient.getName().isEmpty()) {
 			log.info("PATIENT -- Patient name found!");
@@ -311,13 +306,14 @@ public class DeathRecordController {
 				ecr.getPatient().setethnicity(new CodeableConcept("http://fhir.org/guides/argonaut/StructureDefinition/argo-ethnicity",valueExtension.getValue().toString(),valueExtension.getValue().toString()));
 			}
 		}
-		for(IdentifierDt identifier : patient.getIdentifier()) {
+		
+		/*for(IdentifierDt identifier : patient.getIdentifier()) {
 			if(identifier.getSystem().equals("http://hl7.org/fhir/sid/us-ssn")) {
 				body.put("snn.snn1", identifier.getValue().substring(0, 3));
 				body.put("snn.snn2", identifier.getValue().substring(3, 2));
 				body.put("snn.snn3", identifier.getValue().substring(5, 4));
 			}
-		}
+		}*/
 	}
 
 	void handleRelatedPersons(ECR ecr, IdDt IdDt) {
