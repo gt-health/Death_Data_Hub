@@ -1,6 +1,6 @@
 # Death Data Hub
-	This project is the central repository for standardizing death reporting in collaboration with EDRS systems, medical data providers, and parties interested in data exchange around death records.
-	This project is broken in 3 major parts.
+This project is the central repository for standardizing death reporting in collaboration with EDRS systems, medical data providers, and parties interested in data exchange around death records.
+This project is broken in 3 major parts.
 
 1. DeathRecord_Puller.
 	DeathRecord_Puller is a service for pulling records from a FHIR_enabled server.
