@@ -72,7 +72,6 @@ import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.model.primitive.StringDt;
 import ca.uhn.fhir.model.primitive.TimeDt;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import edu.emory.mathcs.backport.java.util.Collections;
 import gatech.edu.DeathRecordPuller.util.HAPIFHIRUtil;
 import gatech.edu.STIECR.JSON.CodeableConcept;
 import gatech.edu.STIECR.JSON.Diagnosis;
@@ -516,7 +515,11 @@ public class DeathRecordController {
 				if (medicationCodeUntyped instanceof CodeableConceptDt) {
 					code = (CodeableConceptDt) medicationCodeUntyped;
 				} else if (medicationCodeUntyped instanceof ResourceReferenceDt) {
-					code = ((Medication) ((ResourceReferenceDt) medicationCodeUntyped).getResource()).getCode();
+					ResourceReferenceDt medicationReference = (ResourceReferenceDt) medicationCodeUntyped;
+					IdDt medicationId = new IdDt(HAPIFHIRUtil.getIdFromFullURL(medicationReference.getReference().toString()));
+					log.info("MEDICATIONORDER --- medication reference Id: " + medicationId);
+					Medication baseMedication = FHIRClient.getMedicationReference(medicationReference.getId());
+					code = baseMedication.getCode();
 				}
 				if (code != null) {
 					log.info("MEDICATIONORDER --- Trying code with this many codings: " + code.getCoding().size());

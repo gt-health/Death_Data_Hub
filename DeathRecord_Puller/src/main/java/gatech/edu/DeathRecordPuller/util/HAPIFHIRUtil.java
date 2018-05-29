@@ -77,4 +77,8 @@ public class HAPIFHIRUtil {
 		returnAddress.setPostalCode(string); //End of formatted string
 		return returnAddress;
 	}
+	
+	public static String getIdFromFullURL(String URL) {
+		return URL.substring(URL.lastIndexOf('/'));
+	}
 }

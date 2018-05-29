@@ -23,6 +23,7 @@ import ca.uhn.fhir.model.dstu2.resource.Conformance.RestResource;
 import ca.uhn.fhir.model.dstu2.resource.Coverage;
 import ca.uhn.fhir.model.dstu2.resource.Encounter;
 import ca.uhn.fhir.model.dstu2.resource.Immunization;
+import ca.uhn.fhir.model.dstu2.resource.Medication;
 import ca.uhn.fhir.model.dstu2.resource.MedicationAdministration;
 import ca.uhn.fhir.model.dstu2.resource.MedicationDispense;
 import ca.uhn.fhir.model.dstu2.resource.MedicationOrder;
@@ -33,6 +34,7 @@ import ca.uhn.fhir.model.dstu2.resource.Practitioner;
 import ca.uhn.fhir.model.dstu2.resource.Procedure;
 import ca.uhn.fhir.model.dstu2.resource.RelatedPerson;
 import ca.uhn.fhir.model.primitive.IdDt;
+import ca.uhn.fhir.parser.LenientErrorHandler;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import gatech.edu.STIECR.JSON.Name;
 
@@ -48,14 +50,18 @@ public class ClientService {
 	protected String currentBaseUrl;
 	protected static final FhirContext ctx = FhirContext.forDstu2();
 	protected IGenericClient client;
+	private Boolean lenientParsing = Boolean.FALSE;
 	//TODO: Figure out how to search for source_ids, not new ids.
 	@Autowired 
 	public ClientService(){
 		int timeout = 300*1000; // Timeout in 5 min.
-		this.ctx.getRestfulClientFactory().setSocketTimeout(timeout);
-		this.ctx.getRestfulClientFactory().setConnectionRequestTimeout(timeout);
-		this.ctx.getRestfulClientFactory().setConnectTimeout(timeout);
-		this.ctx.getRestfulClientFactory().setPoolMaxTotal(10);
+		ClientService.ctx.getRestfulClientFactory().setSocketTimeout(timeout);
+		ClientService.ctx.getRestfulClientFactory().setConnectionRequestTimeout(timeout);
+		ClientService.ctx.getRestfulClientFactory().setConnectTimeout(timeout);
+		ClientService.ctx.getRestfulClientFactory().setPoolMaxTotal(10);
+		if(lenientParsing) {
+			ClientService.ctx.setParserErrorHandler(new LenientErrorHandler());
+		}
 	}
 	
 	public ClientService(String serverBaseUrl) {
@@ -248,6 +254,14 @@ public class ClientService {
 				.execute();
 		log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
 		return results;
+	}
+	
+	public Medication getMedicationReference(IdDt medicationId) {
+		Medication returnMedication = client.read()
+				.resource(Medication.class)
+				.withId(medicationId)
+				.execute();
+		return returnMedication;
 	}
 	
 	public Bundle getMedications(IdDt patientId) {

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class ClientConfiguration {
 	private String serverBaseUrl;
 	private String dstuVersion;
+	private Boolean lenientParsing = Boolean.FALSE;
 
 	public String getServerBaseUrl() {
 		return serverBaseUrl;
@@ -23,6 +24,14 @@ public class ClientConfiguration {
 	
 	public void setDstuVersion(String dstuVersion) {
 		this.dstuVersion = dstuVersion;
+	}
+	
+	public Boolean getLenientParsing() {
+		return lenientParsing;
+	}
+	
+	public void setLenientParsing(Boolean lenientParsing) {
+		this.lenientParsing = lenientParsing;
 	}
 	
 }
