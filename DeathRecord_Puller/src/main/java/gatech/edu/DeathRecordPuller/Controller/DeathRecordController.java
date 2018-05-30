@@ -999,9 +999,9 @@ public class DeathRecordController {
 	}
 	public static CodeableConcept FHIRCoding2ECRConcept(CodingDt fhirCoding) {
 		CodeableConcept ecrConcept = new CodeableConcept();
-		ecrConcept.setcode(fhirCoding.getCode());
-		ecrConcept.setsystem(fhirCoding.getSystem());
-		if(!fhirCoding.getSystem().isEmpty()) {
+		ecrConcept.setcode(fhirCoding.getCode() == null ? "" : fhirCoding.getCode());
+		ecrConcept.setsystem(fhirCoding.getSystem() == null ? "" : fhirCoding.getSystem());
+		if(fhirCoding.getSystem() != null && !fhirCoding.getSystem().isEmpty()) {
 			if (fhirCoding.getSystem().equals("http://snomed.info/sct")) {
 				ecrConcept.setsystem("SNOMED CT");
 			} else
