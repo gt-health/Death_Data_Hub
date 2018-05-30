@@ -535,7 +535,7 @@ public class DeathRecordController {
 						log.info("MEDICATIONORDER --- Trying coding: " + coding.getDisplay());
 						CodeableConcept concept = FHIRCoding2ECRConcept(coding);
 						log.info("MEDICATIONORDER --- Translated to ECRconcept:" + concept.toString());
-						ecrMedication.setCode(concept.getcode() == null);
+						ecrMedication.setCode(concept.getcode());
 						ecrMedication.setSystem(concept.getsystem());
 						ecrMedication.setDisplay(concept.getdisplay());
 						ecrCode.setcode(concept.getcode());
