@@ -535,7 +535,7 @@ public class DeathRecordController {
 						log.info("MEDICATIONORDER --- Trying coding: " + coding.getDisplay());
 						CodeableConcept concept = FHIRCoding2ECRConcept(coding);
 						log.info("MEDICATIONORDER --- Translated to ECRconcept:" + concept.toString());
-						ecrMedication.setCode(concept.getcode());
+						ecrMedication.setCode(concept.getcode() == null);
 						ecrMedication.setSystem(concept.getsystem());
 						ecrMedication.setDisplay(concept.getdisplay());
 						ecrCode.setcode(concept.getcode());
@@ -1001,11 +1001,13 @@ public class DeathRecordController {
 		CodeableConcept ecrConcept = new CodeableConcept();
 		ecrConcept.setcode(fhirCoding.getCode());
 		ecrConcept.setsystem(fhirCoding.getSystem());
-		if (fhirCoding.getSystem().equals("http://snomed.info/sct")) {
-			ecrConcept.setsystem("SNOMED CT");
-		} else
-		if (fhirCoding.getSystem().equals("http://www.nlm.nih.gov/research/umls/rxnorm")) {
-			ecrConcept.setsystem("RxNorm");
+		if(!fhirCoding.getSystem().isEmpty()) {
+			if (fhirCoding.getSystem().equals("http://snomed.info/sct")) {
+				ecrConcept.setsystem("SNOMED CT");
+			} else
+			if (fhirCoding.getSystem().equals("http://www.nlm.nih.gov/research/umls/rxnorm")) {
+				ecrConcept.setsystem("RxNorm");
+			}
 		}
 		ecrConcept.setdisplay(fhirCoding.getDisplay());
 		return ecrConcept;
