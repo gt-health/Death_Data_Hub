@@ -516,9 +516,18 @@ public class DeathRecordController {
 					code = (CodeableConceptDt) medicationCodeUntyped;
 				} else if (medicationCodeUntyped instanceof ResourceReferenceDt) {
 					ResourceReferenceDt medicationReference = (ResourceReferenceDt) medicationCodeUntyped;
-					log.info("MEDICATIONORDER --- medication reference Id: " + medicationReference.getReference());
-					Medication baseMedication = FHIRClient.getMedicationReference(medicationReference.getReference());
-					code = baseMedication.getCode();
+					if(medicationReference.getReference() != null) {
+						log.info("MEDICATIONORDER --- medication reference Id: " + medicationReference.getReference());
+						Medication baseMedication = FHIRClient.getMedicationReference(medicationReference.getReference());
+						code = baseMedication.getCode();
+					}
+					else if(medicationReference.getDisplay() != null) {
+						log.info("MEDICATIONORDER --- medication reference display only: " + medicationReference.getDisplay());
+						code = new CodeableConceptDt();
+						CodingDt singleDisplayCoding = new CodingDt();
+						singleDisplayCoding.setDisplay(medicationReference.getDisplay());
+						code.addCoding(new CodingDt());
+					}
 				}
 				if (code != null) {
 					log.info("MEDICATIONORDER --- Trying code with this many codings: " + code.getCoding().size());
