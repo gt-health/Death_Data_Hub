@@ -79,6 +79,6 @@ public class HAPIFHIRUtil {
 	}
 	
 	public static String getIdFromFullURL(String URL) {
-		return URL.substring(URL.lastIndexOf('/'));
+		return URL.substring(URL.lastIndexOf('/') + 1);
 	}
 }

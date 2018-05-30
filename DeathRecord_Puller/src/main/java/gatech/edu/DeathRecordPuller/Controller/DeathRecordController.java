@@ -516,7 +516,7 @@ public class DeathRecordController {
 					code = (CodeableConceptDt) medicationCodeUntyped;
 				} else if (medicationCodeUntyped instanceof ResourceReferenceDt) {
 					ResourceReferenceDt medicationReference = (ResourceReferenceDt) medicationCodeUntyped;
-					IdDt medicationId = new IdDt(HAPIFHIRUtil.getIdFromFullURL(medicationReference.getReference().toString()));
+					IdDt medicationId = new IdDt(medicationReference.getReference().toString());
 					log.info("MEDICATIONORDER --- medication reference Id: " + medicationId);
 					Medication baseMedication = FHIRClient.getMedicationReference(medicationReference.getId());
 					code = baseMedication.getCode();
@@ -924,9 +924,9 @@ public class DeathRecordController {
 		body.put("cod.immediateInt","minutes");
 		body.put("cod.under1", ecr.getPatient().getDiagnosis().get(1) == null ? "Example Immediate COD" : ecr.getPatient().getDiagnosis().get(1).getDisplay());
 		body.put("cod.under1Int","2 hours");
-		body.put("cod.under1", ecr.getPatient().getDiagnosis().get(2) == null ? "Example Immediate COD" : ecr.getPatient().getDiagnosis().get(2).getDisplay());
+		body.put("cod.under2", ecr.getPatient().getDiagnosis().get(2) == null ? "Example Immediate COD" : ecr.getPatient().getDiagnosis().get(2).getDisplay());
 		body.put("cod.under2Int","6 months");
-		body.put("cod.under1", ecr.getPatient().getDiagnosis().get(3) == null ? "Example Immediate COD" : ecr.getPatient().getDiagnosis().get(3).getDisplay());
+		body.put("cod.under3", ecr.getPatient().getDiagnosis().get(3) == null ? "Example Immediate COD" : ecr.getPatient().getDiagnosis().get(3).getDisplay());
 		body.put("cod.under3Int","15 years");
 		
 		body.put("dateOfBirth.dateOfBirth", ecr.getPatient().getDiagnosis().get(3) == null ? "Example Immediate COD" : ecr.getPatient().getbirthDate().isEmpty() ? "1970-01-01" : ecr.getPatient().getbirthDate());
