@@ -516,9 +516,8 @@ public class DeathRecordController {
 					code = (CodeableConceptDt) medicationCodeUntyped;
 				} else if (medicationCodeUntyped instanceof ResourceReferenceDt) {
 					ResourceReferenceDt medicationReference = (ResourceReferenceDt) medicationCodeUntyped;
-					IdDt medicationId = new IdDt(medicationReference.getReference().toString());
-					log.info("MEDICATIONORDER --- medication reference Id: " + medicationId);
-					Medication baseMedication = FHIRClient.getMedicationReference(medicationReference.getId());
+					log.info("MEDICATIONORDER --- medication reference Id: " + medicationReference.getReference());
+					Medication baseMedication = FHIRClient.getMedicationReference(medicationReference.getReference());
 					code = baseMedication.getCode();
 				}
 				if (code != null) {
