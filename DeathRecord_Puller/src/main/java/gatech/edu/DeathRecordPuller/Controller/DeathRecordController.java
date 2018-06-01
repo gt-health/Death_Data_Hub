@@ -73,6 +73,7 @@ import ca.uhn.fhir.model.primitive.StringDt;
 import ca.uhn.fhir.model.primitive.TimeDt;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
+import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import gatech.edu.DeathRecordPuller.util.HAPIFHIRUtil;
 import gatech.edu.STIECR.JSON.CodeableConcept;
 import gatech.edu.STIECR.JSON.Diagnosis;
@@ -531,7 +532,7 @@ public class DeathRecordController {
 							code.addCoding(new CodingDt());
 						}
 					}
-					catch(InternalErrorException e) {
+					catch(InternalErrorException | ResourceNotFoundException e) {
 						
 					}
 				}
@@ -638,19 +639,19 @@ public class DeathRecordController {
 					try {
 						ResourceReferenceDt medicationReference = (ResourceReferenceDt) medicationCodeUntyped;
 						if(!medicationReference.getReference().isEmpty()) {
-							log.info("MEDICATIONORDER --- medication reference Id: " + medicationReference.getReference());
+							log.info("MEDICATIONSTATEMENT --- medication reference Id: " + medicationReference.getReference());
 							Medication baseMedication = FHIRClient.getMedicationReference(medicationReference.getReference());
 							code = baseMedication.getCode();
 						}
 						else if(medicationReference.getDisplay() != null) {
-							log.info("MEDICATIONORDER --- medication reference display only: " + medicationReference.getDisplay());
+							log.info("MEDICATIONSTATEMENT --- medication reference display only: " + medicationReference.getDisplay());
 							code = new CodeableConceptDt();
 							CodingDt singleDisplayCoding = new CodingDt();
 							singleDisplayCoding.setDisplay(medicationReference.getDisplay());
 							code.addCoding(new CodingDt());
 						}
 					}
-					catch(InternalErrorException e) {
+					catch(InternalErrorException | ResourceNotFoundException e) {
 						
 					}
 				}
