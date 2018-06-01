@@ -72,6 +72,7 @@ import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.model.primitive.StringDt;
 import ca.uhn.fhir.model.primitive.TimeDt;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import gatech.edu.DeathRecordPuller.util.HAPIFHIRUtil;
 import gatech.edu.STIECR.JSON.CodeableConcept;
 import gatech.edu.STIECR.JSON.Diagnosis;
@@ -515,18 +516,23 @@ public class DeathRecordController {
 				if (medicationCodeUntyped instanceof CodeableConceptDt) {
 					code = (CodeableConceptDt) medicationCodeUntyped;
 				} else if (medicationCodeUntyped instanceof ResourceReferenceDt) {
-					ResourceReferenceDt medicationReference = (ResourceReferenceDt) medicationCodeUntyped;
-					if(!medicationReference.getReference().isEmpty()) {
-						log.info("MEDICATIONORDER --- medication reference Id: " + medicationReference.getReference());
-						Medication baseMedication = FHIRClient.getMedicationReference(medicationReference.getReference());
-						code = baseMedication.getCode();
+					try {
+						ResourceReferenceDt medicationReference = (ResourceReferenceDt) medicationCodeUntyped;
+						if(!medicationReference.getReference().isEmpty()) {
+							log.info("MEDICATIONORDER --- medication reference Id: " + medicationReference.getReference());
+							Medication baseMedication = FHIRClient.getMedicationReference(medicationReference.getReference());
+							code = baseMedication.getCode();
+						}
+						else if(medicationReference.getDisplay() != null) {
+							log.info("MEDICATIONORDER --- medication reference display only: " + medicationReference.getDisplay());
+							code = new CodeableConceptDt();
+							CodingDt singleDisplayCoding = new CodingDt();
+							singleDisplayCoding.setDisplay(medicationReference.getDisplay());
+							code.addCoding(new CodingDt());
+						}
 					}
-					else if(medicationReference.getDisplay() != null) {
-						log.info("MEDICATIONORDER --- medication reference display only: " + medicationReference.getDisplay());
-						code = new CodeableConceptDt();
-						CodingDt singleDisplayCoding = new CodingDt();
-						singleDisplayCoding.setDisplay(medicationReference.getDisplay());
-						code.addCoding(new CodingDt());
+					catch(InternalErrorException e) {
+						
 					}
 				}
 				if (code != null) {
@@ -625,13 +631,36 @@ public class DeathRecordController {
 				log.info("MEDICATIONSTATEMENT  --- Trying medicationOrder: " + medicationStatement.getId());
 				IDatatype medicationCodeUntyped = medicationStatement.getMedication();
 				log.info("MEDICATIONSTATEMENT  --- medication code element class: " + medicationCodeUntyped.getClass());
+				CodeableConceptDt code = null;
 				if (medicationCodeUntyped instanceof CodeableConceptDt) {
-					CodeableConceptDt code = (CodeableConceptDt) medicationCodeUntyped;
-					log.info("MEDICATIONSTATEMENT  --- Trying code with this many codings: " + code.getCoding().size());
+					code = (CodeableConceptDt) medicationCodeUntyped;
+				} else if (medicationCodeUntyped instanceof ResourceReferenceDt) {
+					try {
+						ResourceReferenceDt medicationReference = (ResourceReferenceDt) medicationCodeUntyped;
+						if(!medicationReference.getReference().isEmpty()) {
+							log.info("MEDICATIONORDER --- medication reference Id: " + medicationReference.getReference());
+							Medication baseMedication = FHIRClient.getMedicationReference(medicationReference.getReference());
+							code = baseMedication.getCode();
+						}
+						else if(medicationReference.getDisplay() != null) {
+							log.info("MEDICATIONORDER --- medication reference display only: " + medicationReference.getDisplay());
+							code = new CodeableConceptDt();
+							CodingDt singleDisplayCoding = new CodingDt();
+							singleDisplayCoding.setDisplay(medicationReference.getDisplay());
+							code.addCoding(new CodingDt());
+						}
+					}
+					catch(InternalErrorException e) {
+						
+					}
+				}
+				
+				if (code != null) {
+					log.info("MEDICATIONORDER --- Trying code with this many codings: " + code.getCoding().size());
 					for (CodingDt coding : code.getCoding()) {
-						log.info("MEDICATIONSTATEMENT  --- Trying coding: " + coding.getDisplay());
+						log.info("MEDICATIONORDER --- Trying coding: " + coding.getDisplay());
 						CodeableConcept concept = FHIRCoding2ECRConcept(coding);
-						log.info("MEDICATIONSTATEMENT  --- Translated to ECRconcept:" + concept.toString());
+						log.info("MEDICATIONORDER --- Translated to ECRconcept:" + concept.toString());
 						ecrMedication.setCode(concept.getcode());
 						ecrMedication.setSystem(concept.getsystem());
 						ecrMedication.setDisplay(concept.getdisplay());
