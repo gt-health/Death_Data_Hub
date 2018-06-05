@@ -36,6 +36,7 @@ import ca.uhn.fhir.model.dstu2.resource.RelatedPerson;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.parser.LenientErrorHandler;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
 import gatech.edu.STIECR.JSON.Name;
 
 @Service
@@ -92,13 +93,19 @@ public class ClientService {
 	public Bundle getPatientUsingIdentifierAndOrganization(String identifier,String organization) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting everything with identifier="+identifier+" and organization="+organization);
-		Bundle results = client.search()
-				.forResource(Patient.class)
-				.where(Patient.IDENTIFIER.exactly().identifier(identifier))
-				.and(Patient.ORGANIZATION.hasId(organization))
-				.include(Patient.INCLUDE_LINK)
-				.returnBundle(Bundle.class)
-				.execute();
+		Bundle results = new Bundle();
+		try {
+			results = client.search()
+					.forResource(Patient.class)
+					.where(Patient.IDENTIFIER.exactly().identifier(identifier))
+					.and(Patient.ORGANIZATION.hasId(organization))
+					.include(Patient.INCLUDE_LINK)
+					.returnBundle(Bundle.class)
+					.execute();
+		}
+		catch (BaseServerResponseException e) {
+			
+		}
 		log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
 		return results;
 	}
@@ -106,11 +113,17 @@ public class ClientService {
 	public Bundle getRelatedPersons(String personName) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting related person with personName="+personName);
-		Bundle results = client.search()
-				.forResource(RelatedPerson.class)
-				.where(RelatedPerson.NAME.matches().value(personName))
-				.returnBundle(Bundle.class)
-				.execute();
+		Bundle results = new Bundle();
+		try {
+			results = client.search()
+					.forResource(RelatedPerson.class)
+					.where(RelatedPerson.NAME.matches().value(personName))
+					.returnBundle(Bundle.class)
+					.execute();
+		}
+		catch (BaseServerResponseException e) {
+			
+		}
 		log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
 		return results;
 	}
@@ -118,11 +131,17 @@ public class ClientService {
 	public Bundle getRelatedPersons(IdDt patientId) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting related person with patientId="+patientId);
-		Bundle results = client.search()
-				.forResource(RelatedPerson.class)
-				.where(RelatedPerson.PATIENT.hasId(patientId.getIdPart()))
-				.returnBundle(Bundle.class)
-				.execute();
+		Bundle results = new Bundle();
+		try {
+			results = client.search()
+					.forResource(RelatedPerson.class)
+					.where(RelatedPerson.PATIENT.hasId(patientId.getIdPart()))
+					.returnBundle(Bundle.class)
+					.execute();
+		}
+		catch (BaseServerResponseException e) {
+			
+		}
 		log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
 		return results;
 	}
@@ -130,59 +149,90 @@ public class ClientService {
 	public Bundle getPatient(String personName) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting patient with personName="+personName);
-		Bundle results = client.search()
-				.forResource(Patient.class)
-				.where(Patient.NAME.matches().value(personName))
-				.returnBundle(Bundle.class)
-				.execute();
-		log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		Bundle results = new Bundle();
+		try {
+			results = client.search()
+					.forResource(Patient.class)
+					.where(Patient.NAME.matches().value(personName))
+					.returnBundle(Bundle.class)
+					.execute();
+			log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
+		
 		return results;
 	}
 	
 	public Patient getPatient(IdDt patientId) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting patient with patientId="+patientId);
-		Patient results = client.read()
-				.resource(Patient.class)
-				.withId(patientId)
-				.execute();
-		log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		Patient results = new Patient();
+		try {
+			results = client.read()
+					.resource(Patient.class)
+					.withId(patientId)
+					.execute();
+			log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
 		return results;
 	}
 	
 	public Bundle getPatient(Name personName) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting patient with personName="+personName);
-		Bundle results = client.search()
-				.forResource(Patient.class)
-				.where(Patient.GIVEN.matches().value(personName.getgiven()))
-				.and(Patient.FAMILY.matches().value(personName.getfamily()))
-				.returnBundle(Bundle.class)
-				.execute();
-		log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		Bundle results = new Bundle();
+		try {
+			results = client.search()
+					.forResource(Patient.class)
+					.where(Patient.GIVEN.matches().value(personName.getgiven()))
+					.and(Patient.FAMILY.matches().value(personName.getfamily()))
+					.returnBundle(Bundle.class)
+					.execute();
+			log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
 		return results;
 	}
 	
 	public Bundle getPatientByIdentifier(String identifierSystem, String identifierValue) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting patient by identifier with identifierSystem="+ identifierSystem+ " identifierValue="+identifierValue);
-		Bundle results = client.search()
-				.forResource(Patient.class)
-				.where(Patient.IDENTIFIER.exactly().systemAndIdentifier(identifierSystem, identifierValue))
-				.returnBundle(Bundle.class)
-				.execute();
-		log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		Bundle results = new Bundle();
+		try {
+			results = client.search()
+					.forResource(Patient.class)
+					.where(Patient.IDENTIFIER.exactly().systemAndIdentifier(identifierSystem, identifierValue))
+					.returnBundle(Bundle.class)
+					.execute();
+			log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
 		return results;
 	}
 	
 	public Practitioner getPractictioner(IdDt practitionerId) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting practictioner with practitionerId="+practitionerId);
-		Practitioner results = client.read()
-				.resource(Practitioner.class)
-				.withId(practitionerId)
-				.execute();
-		log.info("Found :"+results.getName().toString());
+		Practitioner results = new Practitioner();
+		try {
+			results = client.read()
+					.resource(Practitioner.class)
+					.withId(practitionerId)
+					.execute();
+			log.info("Found :"+results.getName().toString());
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
 		return results;
 	}
 	
@@ -199,94 +249,154 @@ public class ClientService {
 	public Bundle getImmunizations(IdDt patientId) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting immunizations with patientId="+patientId);
-		Bundle results = client.search()
-				.forResource(Immunization.class)
-				.where(Immunization.PATIENT.hasId(patientId.getIdPart()))
-				.returnBundle(Bundle.class)
-				.execute();
-		log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		Bundle results = new Bundle();
+		try {
+			results = client.search()
+					.forResource(Immunization.class)
+					.where(Immunization.PATIENT.hasId(patientId.getIdPart()))
+					.returnBundle(Bundle.class)
+					.execute();
+			log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
 		return results;
 	}
 	
 	public Bundle getProcedures(IdDt patientId) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting procedures with patientId="+patientId);
-		Bundle results = client.search()
-				.forResource(Procedure.class)
-				.where(Procedure.PATIENT.hasId(patientId.getIdPart()))
-				.returnBundle(Bundle.class)
-				.execute();
-		log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		Bundle results = new Bundle();
+		try {
+			results = client.search()
+					.forResource(Procedure.class)
+					.where(Procedure.PATIENT.hasId(patientId.getIdPart()))
+					.returnBundle(Bundle.class)
+					.execute();
+			log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
 		return results;
 	}
 	
 	public Bundle getEncounters(IdDt patientId) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting encounters with patientId="+patientId);
-		Bundle results = client.search()
-				.forResource(Encounter.class)
-				.where(Encounter.PATIENT.hasId(patientId.getIdPart()))
-				.returnBundle(Bundle.class)
-				.execute();
-		log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		Bundle results = new Bundle();
+		try {
+			results = client.search()
+					.forResource(Encounter.class)
+					.where(Encounter.PATIENT.hasId(patientId.getIdPart()))
+					.returnBundle(Bundle.class)
+					.execute();
+			log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
 		return results;
 	}
 	
 	public Bundle getConditions(IdDt patientId) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting conditions with patientId="+patientId);
-		Bundle results = client.search()
-				.forResource(Condition.class)
-				.where(Condition.PATIENT.hasId(patientId.getIdPart()))
-				.returnBundle(Bundle.class)
-				.execute();
-		log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		Bundle results = new Bundle();
+		try {
+			results = client.search()
+					.forResource(Condition.class)
+					.where(Condition.PATIENT.hasId(patientId.getIdPart()))
+					.returnBundle(Bundle.class)
+					.execute();
+			log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
 		return results;
 	}
 	
 	public Bundle getObservations(IdDt patientId) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting observations with patientId="+patientId);
-		Bundle results = client.search()
-				.forResource(Observation.class)
-				.where(Observation.PATIENT.hasId(patientId.getIdPart()))
-				.returnBundle(Bundle.class)
-				.execute();
-		log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		Bundle results = new Bundle();
+		try {
+			results = client.search()
+					.forResource(Observation.class)
+					.where(Observation.PATIENT.hasId(patientId.getIdPart()))
+					.returnBundle(Bundle.class)
+					.execute();
+			log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
 		return results;
 	}
 	
 	public Medication getMedicationReference(IdDt medicationId) {
-		Medication returnMedication = client.read()
-				.resource(Medication.class)
-				.withId(medicationId)
-				.execute();
+		Medication returnMedication = new Medication();
+		try {
+			returnMedication = client.read()
+					.resource(Medication.class)
+					.withId(medicationId)
+					.execute();
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
 		return returnMedication;
 	}
 	
 	public Bundle getMedications(IdDt patientId) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting medications with patientId="+patientId);
-		Bundle resultsA = client.search()
-				.forResource(MedicationAdministration.class)
-				.where(MedicationAdministration.PATIENT.hasId(patientId.getIdPart()))
-				.returnBundle(Bundle.class)
-				.execute();
-		Bundle resultsD = client.search()
-				.forResource(MedicationDispense.class)
-				.where(MedicationDispense.PATIENT.hasId(patientId.getIdPart()))
-				.returnBundle(Bundle.class)
-				.execute();
-		Bundle resultsO = client.search()
-				.forResource(MedicationOrder.class)
-				.where(MedicationOrder.PATIENT.hasId(patientId.getIdPart()))
-				.returnBundle(Bundle.class)
-				.execute();
-		Bundle resultsM = client.search()
-				.forResource(MedicationStatement.class)
-				.where(MedicationStatement.PATIENT.hasId(patientId.getIdPart()))
-				.returnBundle(Bundle.class)
-				.execute();
+		Bundle resultsA = new Bundle();
+		try {
+			resultsA = client.search()
+					.forResource(MedicationAdministration.class)
+					.where(MedicationAdministration.PATIENT.hasId(patientId.getIdPart()))
+					.returnBundle(Bundle.class)
+					.execute();
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
+		Bundle resultsD = new Bundle();
+		try {
+			resultsD = client.search()
+					.forResource(MedicationDispense.class)
+					.where(MedicationDispense.PATIENT.hasId(patientId.getIdPart()))
+					.returnBundle(Bundle.class)
+					.execute();
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
+		Bundle resultsO = new Bundle();
+		try {
+			resultsO = client.search()
+					.forResource(MedicationOrder.class)
+					.where(MedicationOrder.PATIENT.hasId(patientId.getIdPart()))
+					.returnBundle(Bundle.class)
+					.execute();
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
+		Bundle resultsM = new Bundle();
+		try {
+			resultsM = client.search()
+					.forResource(MedicationStatement.class)
+					.where(MedicationStatement.PATIENT.hasId(patientId.getIdPart()))
+					.returnBundle(Bundle.class)
+					.execute();
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
 		List<Bundle> medBundles = new ArrayList<Bundle>();
 		medBundles.add(resultsA);
 		medBundles.add(resultsD);
@@ -305,48 +415,72 @@ public class ClientService {
 	public Bundle getMedicationAdministrations(IdDt patientId) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting medications administrations with patientId="+patientId);
-		Bundle returnBundle = client.search()
-				.forResource(MedicationAdministration.class)
-				.where(MedicationAdministration.PATIENT.hasId(patientId.getIdPart()))
-				.returnBundle(Bundle.class)
-				.execute();
-		log.info("Found :"+returnBundle.toString());
+		Bundle returnBundle = new Bundle();
+		try {
+			returnBundle = client.search()
+					.forResource(MedicationAdministration.class)
+					.where(MedicationAdministration.PATIENT.hasId(patientId.getIdPart()))
+					.returnBundle(Bundle.class)
+					.execute();
+			log.info("Found :"+returnBundle.toString());
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
 		return returnBundle;
 	}
 	
 	public Bundle getMedicationDispenses(IdDt patientId) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting medications dispenses with patientId="+patientId);
-		Bundle returnBundle = client.search()
-				.forResource(MedicationDispense.class)
-				.where(MedicationDispense.PATIENT.hasId(patientId.getIdPart()))
-				.returnBundle(Bundle.class)
-				.execute();
-		log.info("Found :"+returnBundle.toString());
+		Bundle returnBundle = new Bundle();
+		try {
+			returnBundle = client.search()
+					.forResource(MedicationDispense.class)
+					.where(MedicationDispense.PATIENT.hasId(patientId.getIdPart()))
+					.returnBundle(Bundle.class)
+					.execute();
+			log.info("Found :"+returnBundle.toString());
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
 		return returnBundle;
 	}
 	
 	public Bundle getMedicationOrders(IdDt patientId) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting medications orders with patientId="+patientId);
-		Bundle returnBundle = client.search()
-				.forResource(MedicationOrder.class)
-				.where(MedicationOrder.PATIENT.hasId(patientId.getIdPart()))
-				.returnBundle(Bundle.class)
-				.execute();
-		log.info("Found :"+returnBundle.toString());
+		Bundle returnBundle = new Bundle();
+		try {
+			returnBundle = client.search()
+					.forResource(MedicationOrder.class)
+					.where(MedicationOrder.PATIENT.hasId(patientId.getIdPart()))
+					.returnBundle(Bundle.class)
+					.execute();
+			log.info("Found :"+returnBundle.toString());
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
 		return returnBundle;
 	}
 	
 	public Bundle getMedicationStatements(IdDt patientId) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting medications orders with patientId="+patientId);
-		Bundle returnBundle = client.search()
-				.forResource(MedicationStatement.class)
-				.where(MedicationStatement.PATIENT.hasId(patientId.getIdPart()))
-				.returnBundle(Bundle.class)
-				.execute();
-		log.info("Found :"+returnBundle.toString());
+		Bundle returnBundle = new Bundle();
+		try {
+			returnBundle = client.search()
+					.forResource(MedicationStatement.class)
+					.where(MedicationStatement.PATIENT.hasId(patientId.getIdPart()))
+					.returnBundle(Bundle.class)
+					.execute();
+			log.info("Found :"+returnBundle.toString());
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
 		return returnBundle;
 	}
 	
@@ -355,48 +489,70 @@ public class ClientService {
 	public Bundle getCoverages(IdDt providerId) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting coverages for providerId="+providerId);
-		Bundle returnBundle = client.search()
-				.forResource(Coverage.class)
-				.where(Coverage.ISSUER.hasId(providerId.getValue()))
-				.returnBundle(Bundle.class)
-				.execute();
-		log.info("Found :"+returnBundle.toString());
+		Bundle returnBundle = new Bundle();
+		try {
+			returnBundle = client.search()
+					.forResource(Coverage.class)
+					.where(Coverage.ISSUER.hasId(providerId.getValue()))
+					.returnBundle(Bundle.class)
+					.execute();
+			log.info("Found :"+returnBundle.toString());
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
 		return returnBundle;
 	}
 	
 	public Bundle getClaims(IdDt patientId) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting claims for patientId="+patientId);
-		Bundle returnBundle = client.search()
-				.forResource(Claim.class)
-				.where(Claim.PATIENT.hasId(patientId.getIdPart()))
-				.returnBundle(Bundle.class)
-				.execute();
-		log.info("Found :"+returnBundle.toString());
+		Bundle returnBundle = new Bundle();
+		try {
+			returnBundle = client.search()
+					.forResource(Claim.class)
+					.where(Claim.PATIENT.hasId(patientId.getIdPart()))
+					.returnBundle(Bundle.class)
+					.execute();
+			log.info("Found :"+returnBundle.toString());
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
 		return returnBundle;
 	}
 	
 	public Condition getConditionById(IdDt conditionId) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting condition with id="+conditionId);
-
-		Condition returnCondition = client.read()
-				.resource(Condition.class)
-				.withId(conditionId)
-				.execute();
-		log.info("Found :"+returnCondition.toString());
+		Condition returnCondition = new Condition();
+		try {
+			returnCondition = client.read()
+					.resource(Condition.class)
+					.withId(conditionId)
+					.execute();
+			log.info("Found :"+returnCondition.toString());
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
 		return returnCondition;
 	}
 	
 	public Coverage getCoverageById(IdDt coverageId) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting coverage with id="+coverageId);
-
-		Coverage returnCoverage = client.read()
-				.resource(Coverage.class)
-				.withId(coverageId)
-				.execute();
-		log.info("Found :"+returnCoverage.toString());
+		Coverage returnCoverage = new Coverage();
+		try {
+			returnCoverage = client.read()
+					.resource(Coverage.class)
+					.withId(coverageId)
+					.execute();
+			log.info("Found :"+returnCoverage.toString());
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
 		return returnCoverage;
 	}
 	
