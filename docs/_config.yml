@@ -1,4 +1,4 @@
-theme: jekyll-theme-minimal
+theme: jekyll-theme-slate
 title: Death Data Hub, CDC API Project for Death Records
 description: API Services for Getting and Distributing Decedent Data between Stakeholders.
 show_downloads: false
