@@ -1,225 +1,93 @@
-[{  
-   "Sending Application":"GT 1234 CLIA",
-   "Id": "777333333",
-   "Patient":{  
-      "Preferred_Language":{  
-         "Code":"eng",
-         "System":"ISO6392",
-         "Display":"English"
-      },
-      "Street_Address":"2222 Home Street, Ann Arbor MI 99999",
-      "Birth_Date":"19750602",
-      "Ethnicity":{  
-         "Code":"N",
-         "System":"HL70189",
-         "Display":"Not Hispanic or Latino"
-      },
-      "Sex":"M",
-      "Race":{  
-         "Code":"2106-3",
-         "System":"CDCREC",
-         "Display":"White"
-      },
-      "ID":"777333333",
-      "Lab_Order_Code":[  
-         {  
-            "Laboratory_Results":[  
-               {  
-                  "Value":"Positive",
-                  "Code":"164200",
-                  "System":"L",
-                  "Display":"C. trachomatis - PCA"
-               }
-            ],
-            "Code":"164200",
-            "System":"L",
-            "Display":"C. trachomatis - PCA",
-            "Provider":{  
-               "ID":"P49430",
-               "Name":"D ATKINSON"
-            }
-         },
-         {  
-            "Laboratory_Results":[  
-               {  
-                  "Value":"Negative",
-                  "Code":"164205",
-                  "System":"L",
-                  "Display":"N gonorrhoeae Competition Rflx"
-               },
-               {  
-                  "Value":"See Reflex",
-                  "Code":"164212",
-                  "System":"L",
-                  "Display":"N gonorrhoeae DNA Probe w/Rflx"
-               }
-            ],
-            "Code":"164205",
-            "System":"L",
-            "Display":"N gonorrhoeae Competition Rflx",
-            "Provider":{  
-               "ID":"P49430",
-               "Name":"D ATKINSON"
-            }
-         }
-      ],
-      "Name":{  
-         "given":"Adam",
-         "family":"Everyman"
+[{
+   "Id": "1",
+   "Patient":{
+      "ID":"1",
+      "Name":{
+         "given":"Byron",
+         "family":"Test1"
       }
-   },
-   "Provider":{  
-      "ID":"P49430",
-      "Name":"D ATKINSON"
    }
 },
-{  
-   "Sending Application":"GT 1234 CLIA",
-   "Id": "888444444",
-   "Patient":{  
-      "Preferred_Language":{  
-         "Code":"eng",
-         "System":"ISO6392",
-         "Display":"English"
-      },
-      "Street_Address":"2222 Home Street, Ann Arbor MI 99999",
-      "Birth_Date":"19750602",
-      "Ethnicity":{  
-         "Code":"N",
-         "System":"HL70189",
-         "Display":"Not Hispanic or Latino"
-      },
-      "Sex":"M",
-      "Race":{  
-         "Code":"2106-3",
-         "System":"CDCREC",
-         "Display":"White"
-      },
-      "ID":"888444444",
-      "Lab_Order_Code":[  
-         {  
-            "Laboratory_Results":[  
-               {  
-                  "Value":"Positive",
-                  "Code":"164200",
-                  "System":"L",
-                  "Display":"C. trachomatis - PCA"
-               }
-            ],
-            "Code":"164200",
-            "System":"L",
-            "Display":"C. trachomatis - PCA",
-            "Provider":{  
-               "ID":"P49430",
-               "Name":"D ATKINSON"
-            }
-         },
-         {  
-            "Laboratory_Results":[  
-               {  
-                  "Value":"Negative",
-                  "Code":"164205",
-                  "System":"L",
-                  "Display":"N gonorrhoeae Competition Rflx"
-               },
-               {  
-                  "Value":"See Reflex",
-                  "Code":"164212",
-                  "System":"L",
-                  "Display":"N gonorrhoeae DNA Probe w/Rflx"
-               }
-            ],
-            "Code":"164205",
-            "System":"L",
-            "Display":"N gonorrhoeae Competition Rflx",
-            "Provider":{  
-               "ID":"P49430",
-               "Name":"D ATKINSON"
-            }
-         }
-      ],
-      "Name":{  
-         "given":"Betty",
-         "family":"Everywomen"
+{
+   "Id": "2",
+   "Patient":{
+      "ID":"2",
+      "Name":{
+         "given":"Leia",
+         "family":"Organa"
       }
-   },
-   "Provider":{  
-      "ID":"P49430",
-      "Name":"D ATKINSON"
    }
 },
-{  
-   "Sending Application":"GT 1234 CLIA",
-   "Id": "999555555",
-   "Patient":{  
-      "Preferred_Language":{  
-         "Code":"eng",
-         "System":"ISO6392",
-         "Display":"English"
-      },
-      "Street_Address":"2222 Home Street, Ann Arbor MI 99999",
-      "Birth_Date":"19750602",
-      "Ethnicity":{  
-         "Code":"N",
-         "System":"HL70189",
-         "Display":"Not Hispanic or Latino"
-      },
-      "Sex":"M",
-      "Race":{  
-         "Code":"2106-3",
-         "System":"CDCREC",
-         "Display":"White"
-      },
-      "ID":"999555555",
-      "Lab_Order_Code":[  
-         {  
-            "Laboratory_Results":[  
-               {  
-                  "Value":"Positive",
-                  "Code":"164200",
-                  "System":"L",
-                  "Display":"C. trachomatis - PCA"
-               }
-            ],
-            "Code":"164200",
-            "System":"L",
-            "Display":"C. trachomatis - PCA",
-            "Provider":{  
-               "ID":"P49430",
-               "Name":"D ATKINSON"
-            }
-         },
-         {  
-            "Laboratory_Results":[  
-               {  
-                  "Value":"Negative",
-                  "Code":"164205",
-                  "System":"L",
-                  "Display":"N gonorrhoeae Competition Rflx"
-               },
-               {  
-                  "Value":"See Reflex",
-                  "Code":"164212",
-                  "System":"L",
-                  "Display":"N gonorrhoeae DNA Probe w/Rflx"
-               }
-            ],
-            "Code":"164205",
-            "System":"L",
-            "Display":"N gonorrhoeae Competition Rflx",
-            "Provider":{  
-               "ID":"P49430",
-               "Name":"D ATKINSON"
-            }
-         }
-      ],
-      "Name":{  
-         "given":"Charlie",
-         "family":"Everyperson"
+{
+   "Id": "3",
+   "Patient":{
+      "ID":"3",
+      "Name":{
+         "given":"Kirk",
+         "family":"James"
       }
-   },
-   "Provider":{  
-      "ID":"P49430",
-      "Name":"D ATKINSON"
    }
-}]
+},
+{
+   "Id": "4",
+   "Patient":{
+      "ID":"4",
+      "Name":{
+         "given":"Berger",
+         "family":"Sarah"
+      }
+   }
+},
+{
+   "Id": "5",
+   "Patient":{
+      "ID":"5",
+      "Name":{
+         "given":"Han",
+         "family":"Solo"
+      }
+   }
+},
+{
+   "Id": "6",
+   "Patient":{
+      "ID":"6",
+      "Name":{
+         "given":"Darth",
+         "family":"Vader"
+      }
+   }
+},
+{
+   "Id": "9",
+   "Patient":{
+      "ID":"9",
+      "Name":{
+         "given":"man",
+         "family":"fake"
+      }
+   }
+},
+{
+   "Id": "10",
+   "Patient":{
+      "ID":"10",
+      "Name":{
+         "given":"Michael",
+         "family":"Riley"
+      }
+   }
+},
+{
+   "Id": "14",
+   "Patient":{
+      "ID":"14",
+      "Name":{
+         "given":"Yaling",
+         "family":"Wu"
+      }
+   }
+}
+
+
+]
