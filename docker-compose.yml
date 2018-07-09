@@ -2,11 +2,10 @@ version: '2'
 
 services:
   
-  DeathRecordPuller:
+  deathrecordpuller:
     build: ./DeathRecord_Puller/.
     ports:
-      - "8282:8080"
-    command: ["/usr/local/bin/wait-for-postgres.sh","postgres","catalina.sh","run"]
+      - "8080:8080"
 
   frontend:
     container_name: frontend
