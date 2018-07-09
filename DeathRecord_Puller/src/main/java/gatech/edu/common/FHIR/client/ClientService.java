@@ -2,7 +2,9 @@ package gatech.edu.common.FHIR.client;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.slf4j.Logger;
@@ -13,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.model.api.IResource;
 import ca.uhn.fhir.model.dstu2.resource.Bundle;
 import ca.uhn.fhir.model.dstu2.resource.Bundle.Entry;
 import ca.uhn.fhir.model.dstu2.resource.Claim;
@@ -51,7 +54,8 @@ public class ClientService {
 	protected String currentBaseUrl;
 	protected static final FhirContext ctx = FhirContext.forDstu2();
 	protected IGenericClient client;
-	private Boolean lenientParsing = Boolean.FALSE;
+	protected Map<String,RestResource> resourceCapabilityMap = new HashMap<String,RestResource>();
+	protected Boolean lenientParsing = Boolean.FALSE;
 	//TODO: Figure out how to search for source_ids, not new ids.
 	@Autowired 
 	public ClientService(){
@@ -67,18 +71,27 @@ public class ClientService {
 	
 	public ClientService(String serverBaseUrl) {
 		this();
-		this.serverBaseUrl= serverBaseUrl;
-		
+		this.serverBaseUrl= serverBaseUrl;	
 	}
 	
 	public void initializeClient() {
 		client = ctx.newRestfulGenericClient(serverBaseUrl);
 		currentBaseUrl=serverBaseUrl;
+		initializeCapabilityMap();
 	}
 	
 	public void initializeVaClient() {
 		client = ctx.newRestfulGenericClient(vAserverBaseUrl);
 		currentBaseUrl=vAserverBaseUrl;
+		initializeCapabilityMap();
+	}
+	
+	private void initializeCapabilityMap() {
+		List<RestResource> resources = getConformanceStatementResources();
+		for(RestResource aResource : resources) {
+			String key = aResource.getType();
+			resourceCapabilityMap.put(key, aResource);
+		}
 	}
 	
 	public List<RestResource> getConformanceStatementResources() {
