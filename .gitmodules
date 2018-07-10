@@ -1,0 +1,3 @@
+[submodule "GT-FHIR2"]
+	path = GT-FHIR2
+	url = https://github.com/gt-health/GT-FHIR2

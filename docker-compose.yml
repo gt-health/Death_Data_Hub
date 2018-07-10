@@ -4,11 +4,13 @@ services:
   
   deathrecordpuller:
     build: ./DeathRecord_Puller/.
+    restart: always
     ports:
       - "8080:8080"
 
   frontend:
     container_name: frontend
+    restart: always
     build:
       context: ./frontend
       dockerfile: Dockerfile-prod
@@ -16,3 +18,11 @@ services:
       - '80:80'
     environment:
       env_file: .env.production
+      
+  gt-fhir2:
+    build:
+      context: ./GT-FHIR2/
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8181:8080"
