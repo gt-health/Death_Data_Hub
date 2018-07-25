@@ -208,7 +208,7 @@ public class NeCODController {
 			else {
 				objectEntry.putNull("identifier");
 			}
-			if(!condition.getNotes().isEmpty()) {
+			if(condition.getNotes() != null) {
 				objectEntry.put("note", condition.getNotes());
 			}
 			else {
