@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import ca.uhn.fhir.context.FhirContext;
@@ -45,6 +46,7 @@ import gatech.edu.STIECR.JSON.Name;
 @Service
 @Configuration
 @ConfigurationProperties(prefix="FHIR.client")
+@Primary
 public class ClientService {
 	
 	private static final Logger log = LoggerFactory.getLogger(ClientService.class);
