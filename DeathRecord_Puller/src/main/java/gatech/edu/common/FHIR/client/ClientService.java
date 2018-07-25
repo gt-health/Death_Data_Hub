@@ -79,13 +79,13 @@ public class ClientService {
 	public void initializeClient() {
 		client = ctx.newRestfulGenericClient(serverBaseUrl);
 		currentBaseUrl=serverBaseUrl;
-		initializeCapabilityMap();
+//		initializeCapabilityMap();
 	}
 	
 	public void initializeVaClient() {
 		client = ctx.newRestfulGenericClient("https://www.freedomstream.io/CDCArgonaut/api/");
 		currentBaseUrl=vAserverBaseUrl;
-		initializeCapabilityMap();
+//		initializeCapabilityMap();
 	}
 	
 	private void initializeCapabilityMap() {
