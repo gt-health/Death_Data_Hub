@@ -190,8 +190,7 @@ public class NeCODController {
 				objectEntry.putNull("code");
 			}
 			if(!condition.getEncounter().isEmpty()) {
-				Encounter encounter = FHIRClient.getEncounter(condition.getEncounter().getId());
-				objectEntry.put("context", objectMapper.valueToTree(encounter));
+				objectEntry.put("context", objectMapper.valueToTree(condition.getEncounter()));
 			}
 			else {
 				objectEntry.putNull("context");
