@@ -81,7 +81,7 @@ public class ClientService {
 	}
 	
 	public void initializeVaClient() {
-		client = ctx.newRestfulGenericClient("https://www.freedomstream.io/CDCArgonaut/api/");
+		client = ctx.newRestfulGenericClient(vAserverBaseUrl);
 		currentBaseUrl=vAserverBaseUrl;
 		initializeCapabilityMap();
 	}
@@ -304,6 +304,23 @@ public class ClientService {
 					.forResource(Encounter.class)
 					.where(Encounter.PATIENT.hasId(patientId.getIdPart()))
 					.returnBundle(Bundle.class)
+					.execute();
+			log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
+		return results;
+	}
+	
+	public Encounter getEncounter(IdDt encounterId) {
+		log.info("serverBaseUrl="+currentBaseUrl);
+		log.info("Getting encounter with encounterId="+encounterId);
+		Encounter results = new Encounter();
+		try {
+			results = client.read()
+					.resource(Encounter.class)
+					.withId(encounterId)
 					.execute();
 			log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
 		}
