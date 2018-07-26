@@ -328,7 +328,7 @@ public class NeCODController {
 			else {
 				objectEntry.putNull("informationSource");
 			}
-			objectEntry.set("subject", objectMapper.valueToTree(statement.getPatient()));
+			objectEntry.put("subject", statement.getPatient().getDisplay().toString());
 			objectEntry.putNull("derivedFrom");
 			objectEntry.put("taken", statement.getWasNotTaken() ? "n" : "y");
 			if(!statement.getReasonNotTaken().isEmpty()) {
