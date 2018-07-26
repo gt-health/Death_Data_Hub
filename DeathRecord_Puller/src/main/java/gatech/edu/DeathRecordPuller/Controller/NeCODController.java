@@ -1,5 +1,6 @@
 package gatech.edu.DeathRecordPuller.Controller;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,7 @@ import ca.uhn.fhir.model.primitive.DateDt;
 import ca.uhn.fhir.model.primitive.DateTimeDt;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.model.primitive.StringDt;
+import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import gatech.edu.STIECR.JSON.ECR;
@@ -277,6 +279,13 @@ public class NeCODController {
 		Bundle conditions = FHIRClient.getMedicationStatements(patientId);
 		for (Entry entry : conditions.getEntry()) {
 			MedicationStatement statement = (MedicationStatement) entry.getResource();
+			JsonNode conditionJson = null;
+			try {
+				 conditionJson = objectMapper.readTree(jsonParser.encodeResourceToString(statement));
+			} catch (DataFormatException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			ObjectNode objectEntry = JsonNodeFactory.instance.objectNode();
 			if(!statement.getIdentifier().isEmpty()) {
 				objectEntry.put("identifier", statement.getIdentifier().get(0).getValue());
@@ -361,14 +370,14 @@ public class NeCODController {
 				objectEntry.putNull("reasonCode");
 				objectEntry.putNull("reasonReference");
 			}
-			if(!statement.getNote().isEmpty()) {
+			if(statement.getNote() != null && !statement.getNote().isEmpty()) {
 				objectEntry.put("note", statement.getNote());
 			}
 			else {
 				objectEntry.putNull("note");
 			}
-			objectEntry.set("dosage", objectMapper.valueToTree(statement.getDosage())); //Quick dirty conversion
-			
+			JsonNode dosage = conditionJson.path("dosage");
+			objectEntry.set("dosage", dosage); //Quick dirty conversion
 			ArrayNode statementList = (ArrayNode)root.path("GetstatementMedicationResult").path("data").path("medicationList");
 			statementList.add(objectEntry);
 		}
