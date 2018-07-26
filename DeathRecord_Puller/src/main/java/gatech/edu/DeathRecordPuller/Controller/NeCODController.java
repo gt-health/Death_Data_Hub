@@ -380,7 +380,7 @@ public class NeCODController {
 			}
 			JsonNode dosage = conditionJson.path("dosage");
 			objectEntry.set("dosage", dosage); //Quick dirty conversion
-			ArrayNode statementList = (ArrayNode)root.path("GetstatementMedicationResult").path("data").path("medicationList");
+			ArrayNode statementList = (ArrayNode)root.path("GetConditionMedicationResult").path("data").path("medicationList");
 			statementList.add(objectEntry);
 		}
 	}
