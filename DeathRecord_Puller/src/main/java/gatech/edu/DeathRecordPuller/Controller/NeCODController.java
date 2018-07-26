@@ -297,7 +297,7 @@ public class NeCODController {
 				objectEntry.putNull("medicationCodeableConcept");
 			}
 			if(medication instanceof ResourceReferenceDt) {
-				objectEntry.set("medicationReference", objectMapper.valueToTree(medication));
+				objectEntry.put("medicationReference", ((ResourceReferenceDt) medication).getDisplay().toString());
 			}
 			else {
 				objectEntry.putNull("medicationReference");
@@ -346,7 +346,7 @@ public class NeCODController {
 					objectEntry.putNull("reasonCode");
 				}
 				if(reason instanceof ResourceReferenceDt) {
-					objectEntry.set("reasonReference", objectMapper.valueToTree(reason));	
+					objectEntry.put("reasonReference", ((ResourceReferenceDt) reason).getDisplay().toString());	
 				}
 				else {
 					objectEntry.putNull("reasonReference");
