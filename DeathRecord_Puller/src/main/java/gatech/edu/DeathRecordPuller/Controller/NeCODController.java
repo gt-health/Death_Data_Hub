@@ -48,6 +48,7 @@ import ca.uhn.fhir.model.primitive.DateDt;
 import ca.uhn.fhir.model.primitive.DateTimeDt;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.model.primitive.StringDt;
+import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import gatech.edu.STIECR.JSON.ECR;
 import gatech.edu.common.FHIR.client.ClientService;
@@ -59,6 +60,7 @@ public class NeCODController {
 
 	ClientService FHIRClient;
 	private ObjectMapper objectMapper;
+	private IParser jsonParser;
 
 	@Autowired
 	public NeCODController(ClientService FHIRClient) {
@@ -66,6 +68,7 @@ public class NeCODController {
 		this.FHIRClient.initializeVaClient();
 		this.objectMapper = new ObjectMapper();
 		this.objectMapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+		this.jsonParser = FHIRClient.getContext().newJsonParser().setPrettyPrint(true);
 	}
 	
 	@RequestMapping(value = "/GetConditionMedication", method = RequestMethod.GET, produces = "application/json")
@@ -147,13 +150,13 @@ public class NeCODController {
 				objectEntry.putNull("abatementDateTime");
 			}
 			if(abatement instanceof PeriodDt) {
-				objectEntry.put("abatementPeriod",objectMapper.valueToTree(abatement));
+				objectEntry.set("abatementPeriod",objectMapper.valueToTree(abatement));
 			}
 			else {
 				objectEntry.putNull("abatementPeriod");
 			}
 			if(abatement instanceof RangeDt) {
-				objectEntry.put("abatementRange",objectMapper.valueToTree(abatement));
+				objectEntry.set("abatementRange",objectMapper.valueToTree(abatement));
 			}
 			else {
 				objectEntry.putNull("abatementRange");
@@ -166,7 +169,7 @@ public class NeCODController {
 				objectEntry.putNull("asserter");
 			}
 			if(!condition.getBodySite().isEmpty()) {
-				objectEntry.put("bodySite", objectMapper.valueToTree(condition.getBodySite()));
+				objectEntry.set("bodySite", objectMapper.valueToTree(condition.getBodySite()));
 			}
 			else {
 				objectEntry.putNull("bodySite");
@@ -177,26 +180,26 @@ public class NeCODController {
 			else {
 				objectEntry.putNull("category");
 			}
-			if(condition.getClinicalStatusElement().isEmpty()) {
+			if(!condition.getClinicalStatusElement().isEmpty()) {
 				objectEntry.put("clinicalStatus", condition.getClinicalStatusElement().toString());
 			}
 			else {
 				objectEntry.putNull("clinicalStatus");
 			}
-			if(condition.getCode().isEmpty()) {
-				objectEntry.put("code", objectMapper.valueToTree(condition.getCode().toString()));
+			if(!condition.getCode().isEmpty()) {
+				objectEntry.set("code", objectMapper.valueToTree(condition.getCode().toString()));
 			}
 			else {
 				objectEntry.putNull("code");
 			}
 			if(!condition.getEncounter().isEmpty()) {
-				objectEntry.put("context", objectMapper.valueToTree(condition.getEncounter()));
+				objectEntry.put("context", condition.getEncounter().getDisplay().toString());
 			}
 			else {
 				objectEntry.putNull("context");
 			}
 			if(!condition.getEvidence().isEmpty()) {
-				objectEntry.put("evidence", objectMapper.valueToTree(condition.getEvidence()));
+				objectEntry.set("evidence", objectMapper.valueToTree(condition.getEvidence()));
 			}
 			else {
 				objectEntry.putNull("evidence");
@@ -227,13 +230,13 @@ public class NeCODController {
 				objectEntry.putNull("onsetDateTime");
 			}
 			if(onset instanceof PeriodDt) {
-				objectEntry.put("onsetPeriod",objectMapper.valueToTree(onset));
+				objectEntry.set("onsetPeriod",objectMapper.valueToTree(onset));
 			}
 			else {
 				objectEntry.putNull("onsetPeriod");
 			}
 			if(onset instanceof RangeDt) {
-				objectEntry.put("onsetRange",objectMapper.valueToTree(onset));
+				objectEntry.set("onsetRange",objectMapper.valueToTree(onset));
 			}
 			else {
 				objectEntry.putNull("onsetRange");
@@ -247,7 +250,7 @@ public class NeCODController {
 			objectEntry.put("resourceType", "Condition");
 			objectEntry.put("serverity",condition.getSeverity().getText());
 			if(!condition.getStage().isEmpty()) {
-				objectEntry.put("stage", objectMapper.valueToTree(condition.getStage()));
+				objectEntry.set("stage", objectMapper.valueToTree(condition.getStage()));
 			}
 			else {
 				objectEntry.putNull("stage");
@@ -294,7 +297,7 @@ public class NeCODController {
 				objectEntry.putNull("medicationCodeableConcept");
 			}
 			if(medication instanceof ResourceReferenceDt) {
-				objectEntry.put("medicationReference", objectMapper.valueToTree(medication));
+				objectEntry.set("medicationReference", objectMapper.valueToTree(medication));
 			}
 			else {
 				objectEntry.putNull("medicationReference");
@@ -308,7 +311,7 @@ public class NeCODController {
 					objectEntry.putNull("effectiveDateTime");
 				}
 				if(effective instanceof PeriodDt) {
-					objectEntry.put("effectivePeriod",objectMapper.valueToTree(effective));
+					objectEntry.set("effectivePeriod",objectMapper.valueToTree(effective));
 				}
 				else {
 					objectEntry.putNull("effectivePeriod");
@@ -320,16 +323,16 @@ public class NeCODController {
 			}
 			objectEntry.put("dateAsserted", statement.getDateAsserted().toString());
 			if(!statement.getInformationSource().isEmpty()) {
-				objectEntry.put("informationSource", objectMapper.valueToTree(statement.getInformationSource()));
+				objectEntry.set("informationSource", objectMapper.valueToTree(statement.getInformationSource()));
 			}
 			else {
 				objectEntry.putNull("informationSource");
 			}
-			objectEntry.put("subject", objectMapper.valueToTree(statement.getPatient()));
+			objectEntry.set("subject", objectMapper.valueToTree(statement.getPatient()));
 			objectEntry.putNull("derivedFrom");
 			objectEntry.put("taken", statement.getWasNotTaken() ? "n" : "y");
 			if(!statement.getReasonNotTaken().isEmpty()) {
-				objectEntry.put("reasonNotTaken", objectMapper.valueToTree(statement.getReasonNotTaken()));
+				objectEntry.set("reasonNotTaken", objectMapper.valueToTree(statement.getReasonNotTaken()));
 			}
 			else {
 				objectEntry.putNull("reasonNotTaken");
@@ -337,13 +340,13 @@ public class NeCODController {
 			IDatatype reason = statement.getReasonForUse();
 			if(!reason.isEmpty()) {
 				if(reason instanceof CodeableConceptDt) {
-					objectEntry.put("reasonCode", objectMapper.valueToTree(reason));	
+					objectEntry.set("reasonCode", objectMapper.valueToTree(reason));	
 				}
 				else {
 					objectEntry.putNull("reasonCode");
 				}
 				if(reason instanceof ResourceReferenceDt) {
-					objectEntry.put("reasonReference", objectMapper.valueToTree(reason));	
+					objectEntry.set("reasonReference", objectMapper.valueToTree(reason));	
 				}
 				else {
 					objectEntry.putNull("reasonReference");
@@ -359,7 +362,7 @@ public class NeCODController {
 			else {
 				objectEntry.putNull("note");
 			}
-			objectEntry.put("dosage", objectMapper.valueToTree(statement.getDosage())); //Quick dirty conversion
+			objectEntry.set("dosage", objectMapper.valueToTree(statement.getDosage())); //Quick dirty conversion
 			
 			ArrayNode statementList = (ArrayNode)root.path("GetstatementMedicationResult").path("data").path("medicationList");
 			statementList.add(objectEntry);

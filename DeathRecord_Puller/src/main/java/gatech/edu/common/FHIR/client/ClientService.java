@@ -105,6 +105,10 @@ public class ClientService {
 		return returnResourceList;
 	}
 	
+	public FhirContext getContext() {
+		return ctx;
+	}
+	
 	public Bundle getPatientUsingIdentifierAndOrganization(String identifier,String organization) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting everything with identifier="+identifier+" and organization="+organization);
