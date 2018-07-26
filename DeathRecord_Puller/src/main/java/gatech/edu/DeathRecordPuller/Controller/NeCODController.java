@@ -343,7 +343,7 @@ public class NeCODController {
 				objectEntry.putNull("reasonNotTaken");
 			}
 			IDatatype reason = statement.getReasonForUse();
-			if(!reason.isEmpty()) {
+			if(reason != null && !reason.isEmpty()) {
 				if(reason instanceof CodeableConceptDt) {
 					objectEntry.set("reasonCode", objectMapper.valueToTree(reason));	
 				}
