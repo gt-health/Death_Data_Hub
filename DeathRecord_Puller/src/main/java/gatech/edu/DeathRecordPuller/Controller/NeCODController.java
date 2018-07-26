@@ -138,6 +138,13 @@ public class NeCODController {
 		for (Entry entry : conditions.getEntry()) {
 			Condition condition = (Condition) entry.getResource();
 			ObjectNode objectEntry = JsonNodeFactory.instance.objectNode();
+			JsonNode conditionJson = null;
+			try {
+				 conditionJson = objectMapper.readTree(jsonParser.encodeResourceToString(condition));
+			} catch (DataFormatException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			objectEntry.put("abatementAge", "null");
 			IDatatype abatement = condition.getAbatement();
@@ -179,7 +186,7 @@ public class NeCODController {
 				objectEntry.putNull("bodySite");
 			}
 			if(!condition.getCategory().isEmpty()) {
-				objectEntry.put("category", condition.getCategory().toString());
+				objectEntry.put("category", condition.getCategory().getCoding().get(0).getCode().toString());
 			}
 			else {
 				objectEntry.putNull("category");
@@ -191,7 +198,8 @@ public class NeCODController {
 				objectEntry.putNull("clinicalStatus");
 			}
 			if(!condition.getCode().isEmpty()) {
-				objectEntry.set("code", objectMapper.valueToTree(condition.getCode().toString()));
+				JsonNode jsonCode = conditionJson.get("code"); 
+				objectEntry.set("code", jsonCode);
 			}
 			else {
 				objectEntry.putNull("code");
@@ -281,9 +289,9 @@ public class NeCODController {
 		Bundle conditions = FHIRClient.getMedicationStatements(patientId);
 		for (Entry entry : conditions.getEntry()) {
 			MedicationStatement statement = (MedicationStatement) entry.getResource();
-			JsonNode conditionJson = null;
+			JsonNode statementJson = null;
 			try {
-				 conditionJson = objectMapper.readTree(jsonParser.encodeResourceToString(statement));
+				 statementJson = objectMapper.readTree(jsonParser.encodeResourceToString(statement));
 			} catch (DataFormatException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -378,7 +386,7 @@ public class NeCODController {
 			else {
 				objectEntry.putNull("note");
 			}
-			JsonNode dosage = conditionJson.path("dosage");
+			JsonNode dosage = statementJson.path("dosage");
 			objectEntry.set("dosage", dosage); //Quick dirty conversion
 			ArrayNode statementList = (ArrayNode)root.path("GetConditionMedicationResult").path("data").path("medicationList");
 			statementList.add(objectEntry);
