@@ -78,10 +78,12 @@ public class NeCODController {
 		log.info("Pulling Patient Coverage Medications");
 		JsonNode root = JsonNodeFactory.instance.objectNode(); 
 		ObjectNode top = JsonNodeFactory.instance.objectNode();
-		ObjectNode leaf = top.putObject("GetConditionMedicationResult");
-		leaf = leaf.putObject("data");
-		leaf.putArray("conditionList");
-		leaf.putArray("medicationList");
+		top.putObject("GetConditionMedicationResult");
+		ObjectNode getNode = (ObjectNode)top.path("GetConditionMedicationResult");
+		getNode.putObject("data");
+		ObjectNode dataNode = (ObjectNode)getNode.path("data");
+		dataNode.putArray("conditionList");
+		dataNode.putArray("medicationList");
 		root = top;
 		if(id.equals("185601V825290") || id.equals("185602V825292") || id.equals("185603V825293") || id.equals("185604V825294") || id.equals("185605V825295")) {
 			IdDt patientId = new IdDt(id);
