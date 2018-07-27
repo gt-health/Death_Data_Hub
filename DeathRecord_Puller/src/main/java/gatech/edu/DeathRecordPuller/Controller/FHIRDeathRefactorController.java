@@ -156,8 +156,15 @@ public class FHIRDeathRefactorController {
 	}
 	
 	@RequestMapping(value = "/FHIRDeath/Patient", method = RequestMethod.GET, produces = "application/json")
-	public Bundle FHIRDeathGetPatient(@RequestParam(value = "_id") String patient) {
-		return FHIRClient.getPatient(patient);
+	public JsonNode FHIRDeathGetPatient(@RequestParam(value = "_id") String patient) {
+		JsonNode jsonPatientBundle = null;
+		try {
+			jsonPatientBundle = objectMapper.readTree(jsonParserDstu2.encodeResourceToString(FHIRClient.getPatient(patient)));
+		} catch (DataFormatException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return jsonPatientBundle;
 	}
 	
 	/*
