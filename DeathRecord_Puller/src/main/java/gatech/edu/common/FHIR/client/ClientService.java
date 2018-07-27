@@ -201,6 +201,24 @@ public class ClientService {
 		return results;
 	}
 	
+	public Bundle getPatientAndReturnBundle(IdDt patientId) {
+		log.info("serverBaseUrl="+currentBaseUrl);
+		log.info("Getting getPatientAndReturnBundle with patientId="+patientId);
+		Bundle results = new Bundle();
+		try {
+			results = client.search()
+					.forResource(Patient.class)
+					.where(Patient.RES_ID.matches().value(patientId.getIdPart()))
+					.returnBundle(Bundle.class)
+					.execute();
+			log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
+		return results;
+	}
+	
 	public Bundle getPatient(Name personName) {
 		log.info("serverBaseUrl="+currentBaseUrl);
 		log.info("Getting patient with personName="+personName);
