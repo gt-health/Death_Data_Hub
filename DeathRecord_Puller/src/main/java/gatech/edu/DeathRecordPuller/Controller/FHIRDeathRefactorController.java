@@ -173,18 +173,45 @@ public class FHIRDeathRefactorController {
 		return jsonPatientBundle;
 	}
 	
-	/*
+	
 	@RequestMapping(value = "/MedicationRequest", method = RequestMethod.GET, produces = "application/json")
-	public JsonNode DeathRecord(@RequestParam(value = "patient") String patient) {
-		
+	public JsonNode FHIRDeathGetMedicationRequest(@RequestParam(value = "patient") String patient) {
+		org.hl7.fhir.dstu3.model.Bundle dstu3Bundle = new org.hl7.fhir.dstu3.model.Bundle();
+		JsonNode dstu3Json = null;
+		try {
+			dstu3Json = objectMapper.readTree(jsonParserDstu3.encodeResourceToString(dstu3Bundle));
+			//Memory leak
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return dstu3Json;
 	}
 	@RequestMapping(value = "/Observation", method = RequestMethod.GET, produces = "application/json")
-	public JsonNode DeathRecord(@RequestParam(value = "patient") String patient) {
-		
+	public JsonNode FHIRDeathGetObservation(@RequestParam(value = "patient") String patient) {
+		org.hl7.fhir.dstu3.model.Bundle dstu3Bundle = new org.hl7.fhir.dstu3.model.Bundle();
+		JsonNode dstu3Json = null;
+		try {
+			dstu3Json = objectMapper.readTree(jsonParserDstu3.encodeResourceToString(dstu3Bundle));
+			//Memory leak
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return dstu3Json;
 	}
+	
 	@RequestMapping(value = "/Procedure", method = RequestMethod.GET, produces = "application/json")
-	public JsonNode DeathRecord(@RequestParam(value = "patient") String patient) {
-		
+	public JsonNode FHIRDeathGetProcedure(@RequestParam(value = "patient") String patient) {
+		org.hl7.fhir.dstu3.model.Bundle dstu3Bundle = new org.hl7.fhir.dstu3.model.Bundle();
+		JsonNode dstu3Json = null;
+		try {
+			dstu3Json = objectMapper.readTree(jsonParserDstu3.encodeResourceToString(dstu3Bundle));
+			//Memory leak
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return dstu3Json;
 	}
-	*/
 }
