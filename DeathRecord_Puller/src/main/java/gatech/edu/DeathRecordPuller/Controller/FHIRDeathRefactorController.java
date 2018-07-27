@@ -160,7 +160,7 @@ public class FHIRDeathRefactorController {
 		IdDt idType = new IdDt(patient);
 		JsonNode jsonPatientBundle = null;
 		try {
-			jsonPatientBundle = objectMapper.readTree(jsonParserDstu2.encodeResourceToString(FHIRClient.getPatient(idType)));
+			jsonPatientBundle = objectMapper.readTree(jsonParserDstu2.encodeResourceToString(FHIRClient.getPatientAndReturnBundle(idType)));
 		} catch (DataFormatException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
