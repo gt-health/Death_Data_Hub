@@ -115,12 +115,15 @@ public class FHIRDeathRefactorController {
 		this.jsonParserDstu2 = FHIRClient.getContext().newJsonParser().setPrettyPrint(true);
 		this.jsonParserDstu3 = FHIRClient.getContext().forDstu3().newJsonParser().setPrettyPrint(true);
 	}
-
+	
+	//Bundle Type
+	//Condition id
 	@RequestMapping(value = "/FHIRDeath/Condition", method = RequestMethod.GET, produces = "application/json")
 	public JsonNode FHIRDeathGetCondition(@RequestParam(value = "patient") String patient) {
 		IdDt patientId = new IdDt(patient);
 		Bundle dstu2Bundle = FHIRClient.getConditions(patientId);
 		org.hl7.fhir.dstu3.model.Bundle dstu3Bundle = new org.hl7.fhir.dstu3.model.Bundle();
+		dstu3Bundle.setType(org.hl7.fhir.dstu3.model.Bundle.BundleType.SEARCHSET);
 		for(Entry entry:dstu2Bundle.getEntry()) {
 			Condition condition = (Condition)entry.getResource();
 			org.hl7.fhir.dstu3.model.Condition dstu3Condition = new org.hl7.fhir.dstu3.model.Condition();
@@ -140,6 +143,8 @@ public class FHIRDeathRefactorController {
 			org.hl7.fhir.dstu3.model.Coding dstu3Coding = new org.hl7.fhir.dstu3.model.Coding(dstu2Coding.getSystem(),dstu2Coding.getCode(),dstu2Coding.getDisplay());
 			dstu3Code.addCoding(dstu3Coding);
 			dstu3Condition.setCode(dstu3Code);
+			dstu3Condition.setId(condition.getId()); //Packages are different
+			
 			org.hl7.fhir.dstu3.model.Bundle.BundleEntryComponent bundleEntryComponent = new org.hl7.fhir.dstu3.model.Bundle.BundleEntryComponent();
 			bundleEntryComponent.setResource(dstu3Condition);
 			dstu3Bundle.addEntry(bundleEntryComponent);
