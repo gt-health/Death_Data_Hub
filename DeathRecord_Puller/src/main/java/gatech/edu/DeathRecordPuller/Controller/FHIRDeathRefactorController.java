@@ -113,7 +113,7 @@ public class FHIRDeathRefactorController {
 		this.objectMapper = new ObjectMapper();
 		this.objectMapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
 		this.jsonParserDstu2 = FHIRClient.getContext().newJsonParser().setPrettyPrint(true);
-		jsonParserDstu3 = FHIRClient.getContext().forDstu3().newJsonParser().setPrettyPrint(true);
+		this.jsonParserDstu3 = FHIRClient.getContext().forDstu3().newJsonParser().setPrettyPrint(true);
 	}
 
 	@RequestMapping(value = "/FHIRDeath/Condition", method = RequestMethod.GET, produces = "application/json")
@@ -156,7 +156,7 @@ public class FHIRDeathRefactorController {
 	}
 	
 	@RequestMapping(value = "/FHIRDeath/Patient", method = RequestMethod.GET, produces = "application/json")
-	public Bundle FHIRDeathGetPatient(@RequestParam(value = "patient") String patient) {
+	public Bundle FHIRDeathGetPatient(@RequestParam(value = "_id") String patient) {
 		return FHIRClient.getPatient(patient);
 	}
 	
