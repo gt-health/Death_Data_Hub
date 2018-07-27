@@ -123,6 +123,7 @@ public class FHIRDeathRefactorController {
 		IdDt patientId = new IdDt(patient);
 		Bundle dstu2Bundle = FHIRClient.getConditions(patientId);
 		org.hl7.fhir.dstu3.model.Bundle dstu3Bundle = new org.hl7.fhir.dstu3.model.Bundle();
+		dstu3Bundle.setTotal(dstu2Bundle.getEntry().size());
 		dstu3Bundle.setType(org.hl7.fhir.dstu3.model.Bundle.BundleType.SEARCHSET);
 		for(Entry entry:dstu2Bundle.getEntry()) {
 			Condition condition = (Condition)entry.getResource();
@@ -174,9 +175,11 @@ public class FHIRDeathRefactorController {
 	}
 	
 	
-	@RequestMapping(value = "/MedicationRequest", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/FHIRDeath/MedicationRequest", method = RequestMethod.GET, produces = "application/json")
 	public JsonNode FHIRDeathGetMedicationRequest(@RequestParam(value = "patient") String patient) {
 		org.hl7.fhir.dstu3.model.Bundle dstu3Bundle = new org.hl7.fhir.dstu3.model.Bundle();
+		dstu3Bundle.setType(org.hl7.fhir.dstu3.model.Bundle.BundleType.SEARCHSET);
+		dstu3Bundle.setTotal(0);
 		JsonNode dstu3Json = null;
 		try {
 			dstu3Json = objectMapper.readTree(jsonParserDstu3.encodeResourceToString(dstu3Bundle));
@@ -187,9 +190,11 @@ public class FHIRDeathRefactorController {
 		}
 		return dstu3Json;
 	}
-	@RequestMapping(value = "/Observation", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/FHIRDeath/Observation", method = RequestMethod.GET, produces = "application/json")
 	public JsonNode FHIRDeathGetObservation(@RequestParam(value = "patient") String patient) {
 		org.hl7.fhir.dstu3.model.Bundle dstu3Bundle = new org.hl7.fhir.dstu3.model.Bundle();
+		dstu3Bundle.setType(org.hl7.fhir.dstu3.model.Bundle.BundleType.SEARCHSET);
+		dstu3Bundle.setTotal(0);
 		JsonNode dstu3Json = null;
 		try {
 			dstu3Json = objectMapper.readTree(jsonParserDstu3.encodeResourceToString(dstu3Bundle));
@@ -201,9 +206,11 @@ public class FHIRDeathRefactorController {
 		return dstu3Json;
 	}
 	
-	@RequestMapping(value = "/Procedure", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/FHIRDeath/Procedure", method = RequestMethod.GET, produces = "application/json")
 	public JsonNode FHIRDeathGetProcedure(@RequestParam(value = "patient") String patient) {
 		org.hl7.fhir.dstu3.model.Bundle dstu3Bundle = new org.hl7.fhir.dstu3.model.Bundle();
+		dstu3Bundle.setType(org.hl7.fhir.dstu3.model.Bundle.BundleType.SEARCHSET);
+		dstu3Bundle.setTotal(0);
 		JsonNode dstu3Json = null;
 		try {
 			dstu3Json = objectMapper.readTree(jsonParserDstu3.encodeResourceToString(dstu3Bundle));
