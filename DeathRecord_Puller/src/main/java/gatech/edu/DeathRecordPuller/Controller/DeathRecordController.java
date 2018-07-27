@@ -87,8 +87,7 @@ import gatech.edu.STIECR.JSON.ParentGuardian;
 import gatech.edu.STIECR.JSON.Provider;
 import gatech.edu.STIECR.JSON.utils.DateUtil;
 import gatech.edu.common.FHIR.client.ClientService;
-
-import java.util.Collections;
+import gatech.edu.common.FHIR.client.WriteClientService;
 
 @CrossOrigin()
 @RestController
@@ -97,6 +96,7 @@ public class DeathRecordController {
 	private static final Logger log = LoggerFactory.getLogger(DeathRecordController.class);
 
 	ClientService FHIRClient;
+	WriteClientService storageClient;
 	
 	@Autowired
 	public DeathRecordController(ClientService FHIRClient) {
