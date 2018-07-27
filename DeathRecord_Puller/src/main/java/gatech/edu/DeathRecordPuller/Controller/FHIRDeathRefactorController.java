@@ -157,9 +157,10 @@ public class FHIRDeathRefactorController {
 	
 	@RequestMapping(value = "/FHIRDeath/Patient", method = RequestMethod.GET, produces = "application/json")
 	public JsonNode FHIRDeathGetPatient(@RequestParam(value = "_id") String patient) {
+		IdDt idType = new IdDt(patient);
 		JsonNode jsonPatientBundle = null;
 		try {
-			jsonPatientBundle = objectMapper.readTree(jsonParserDstu2.encodeResourceToString(FHIRClient.getPatient(patient)));
+			jsonPatientBundle = objectMapper.readTree(jsonParserDstu2.encodeResourceToString(FHIRClient.getPatient(idType)));
 		} catch (DataFormatException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
