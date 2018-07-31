@@ -264,7 +264,10 @@ public class NeCODController {
 				objectEntry.putNull("onsetString");
 			}
 			objectEntry.put("resourceType", "Condition");
-			objectEntry.put("serverity",condition.getSeverity().getText());
+			
+			ObjectNode serverity = JsonNodeFactory.instance.objectNode();
+			serverity.put("text", "No Known Serverity");
+			objectEntry.set("serverity",serverity);
 			if(!condition.getStage().isEmpty()) {
 				objectEntry.set("stage", objectMapper.valueToTree(condition.getStage()));
 			}
@@ -311,7 +314,9 @@ public class NeCODController {
 			objectEntry.putNull("partOf");
 			objectEntry.putNull("context");
 			objectEntry.put("status", statement.getStatus());
-			objectEntry.putNull("category");
+			ObjectNode category = JsonNodeFactory.instance.objectNode();
+			category.put("text", "No Known Category");
+			objectEntry.set("category",category);
 			IDatatype medication = statement.getMedication();
 			if(medication instanceof CodeableConceptDt) {
 				objectEntry.put("medicationCodeableConcept", ((CodeableConceptDt)medication).getText());
