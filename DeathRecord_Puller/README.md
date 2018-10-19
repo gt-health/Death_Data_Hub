@@ -1,6 +1,9 @@
 # FHIR Controller
 
-This project is a prototype FHIR_Controller for the CDC-STI project. It uses the domain services to pull a list of FHIR endpoints, and searches for relvant patient information for each of them. the FHIR_Controller also has scheduling capabilities in order to repeatable check the endpoints for any new information
+This project is a prototype FHIR_Controller for the CDC-DDH project. It uses
+the domain services to pull a list of FHIR endpoints, and searches for relvant
+patient information for each of them. the FHIR_Controller also has scheduling
+capabilities in order to repeatable check the endpoints for any new information
 
 ## Requirements
 
