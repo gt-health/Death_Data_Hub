@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 public class Patient {
 	@JsonProperty("ID")
-	private List<TypeableID> id = new ArrayList<TypeableID>();
+	private List<TypeableID> id;
 	@JsonProperty("Name")
 	private Name name = new Name();
 	@JsonProperty("Parents_Guardians")
@@ -33,7 +32,6 @@ public class Patient {
 	private boolean pregnant = false;
 	@JsonProperty("Travel_History")
 	private List<String> travelHistory = new ArrayList<String>();
-	//@JsonUnwrapped
 	@JsonProperty("Insurance_Type")
 	private CodeableConcept insuranceType = new CodeableConcept();
 	@JsonProperty("Immunization_History")
@@ -51,7 +49,7 @@ public class Patient {
 	@JsonProperty("Placer_Order_Code")
 	private String placerOrderCode = "";
 	@JsonProperty("Diagnosis")
-	private List<Diagnosis> diagnosis = new ArrayList<Diagnosis>();
+	private Diagnosis diagnosis = new Diagnosis();
 	@JsonProperty("Medication Provided")
 	private List<Medication> medicationProvided = new ArrayList<Medication>();
 	@JsonProperty("Death_Date")
@@ -65,8 +63,7 @@ public class Patient {
 	@JsonProperty("Lab_Tests_Performed")
 	private List<TestResult> labTestsPerformed = new ArrayList<TestResult>();
 
-	public Patient() { }
-	
+	public Patient() {}
 	public List<TypeableID> getid() {
 		return id;
 	}
@@ -240,11 +237,11 @@ public class Patient {
 		this.placerOrderCode = placerOrderCode;
 	}
 
-	public List<Diagnosis> getDiagnosis() {
+	public Diagnosis getDiagnosis() {
 		return diagnosis;
 	}
 
-	public void setDiagnosis(List<Diagnosis> diagnosis) {
+	public void setDiagnosis(Diagnosis diagnosis) {
 		this.diagnosis = diagnosis;
 	}
 	
@@ -375,10 +372,8 @@ public class Patient {
 		if(!newPatient.getplacerOrderCode().isEmpty()) {
 			this.placerOrderCode = newPatient.getplacerOrderCode();
 		}
-		for(Diagnosis aDiagnosis : newPatient.getDiagnosis()) {
-			if(!this.diagnosis.contains(aDiagnosis)) {
-				this.diagnosis.add(aDiagnosis);
-			}
+		if(newPatient.getDiagnosis() != null && (this.diagnosis == null || !newPatient.diagnosis.equals(this.diagnosis))) {
+			this.diagnosis = newPatient.getDiagnosis();
 		}
 		for(Medication medication : newPatient.getMedicationProvided()) {
 			if(!this.medicationProvided.contains(medication)) {

@@ -7,14 +7,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-@JsonSerialize
-@JsonDeserialize
 public class ECR {
 	@JsonProperty("Id")
-	private String ecrId;
+	private Integer ecrId;
 	@JsonProperty("Provider")
 	protected List<Provider> provider = new ArrayList<Provider>();
 	@JsonProperty("Facility")
@@ -29,22 +25,22 @@ public class ECR {
 	public ECR () {}
 	
 	@JsonIgnore
-	public String getECRId() {
+	public Integer getECRId() {
 		return ecrId;
 	}
 	
 	@JsonIgnore
-	public void setECRId(String ecrId) {
+	public void setECRId(Integer ecrId) {
 		this.ecrId = ecrId;
 	}
 	
 	@JsonIgnore
-	public String getId() {
+	public Integer getId() {
 		return ecrId;
 	}
 	
 	@JsonIgnore
-	public void setId(String Id) {
+	public void setId(Integer Id) {
 		this.ecrId = Id;
 	}
 	

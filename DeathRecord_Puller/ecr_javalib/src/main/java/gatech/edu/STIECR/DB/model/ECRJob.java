@@ -45,7 +45,7 @@ public class ECRJob {
 	}
 
 	public ECRJob(ECR ecr) {
-		reportId = Integer.valueOf(ecr.getECRId());
+		reportId = ecr.getECRId();
 		for(TypeableID id: ecr.getPatient().getid()) {
 			try{
 				patientId = Integer.parseInt(id.getvalue());

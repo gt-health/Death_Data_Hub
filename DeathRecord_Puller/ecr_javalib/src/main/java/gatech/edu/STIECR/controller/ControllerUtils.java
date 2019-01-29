@@ -49,7 +49,7 @@ public class ControllerUtils {
 			new CodeableConcept("ICD10CM", "Other chlamydial diseases", "A74.89"),
 			new CodeableConcept("ICD10CM", "Chlamydial infection, unspecified", "A74.9"),
 			new CodeableConcept("ICD10CM", "Congenital pneumonia due to Chlamydia", "P23.1"),
-			new CodeableConcept("ICD10CM", "Chlamydial pneumonia", "J16.0"),
+			new CodeableConcept("ICD10C", "Chlamydial pneumonia", "J16.0"),
 	};
 	public static final CodeableConcept[] CT1R = {
 			new CodeableConcept("SNOMED CT", "Chlamydia trachomatis (organism)", "63938009"),
@@ -550,36 +550,20 @@ public class ControllerUtils {
 	public static CodeableConcept[][] diagnosisCodes = {CT1D,GC1D};
 	
 	public static boolean isSTICode(CodeableConcept code) {
-		String sys = code.getsystem();
-		if ( "LN".equals(sys) ) {
-			sys="LOINC";
-		} else
-		if ( "SCT".equals(sys) ) {
-			sys="SNOMED CT";
-		}
 		for(CodeableConcept[] codeset : allCodes) {
 			for(CodeableConcept possibleCode : codeset) {
-				if(code.getcode().equalsIgnoreCase(possibleCode.getcode()) && sys.equalsIgnoreCase(possibleCode.getsystem()) ) {
+				if(code.equals(possibleCode))
 					return true;
-				}
 			}
 		}
 		return false;
 	}
 	
 	public static boolean isSTIDiagnosisCode(CodeableConcept code) {
-		String sys = code.getsystem();
-		if ( "LN".equals(sys) ) {
-			sys="LOINC";
-		} else
-		if ( "SCT".equals(sys) ) {
-			sys="SNOMED CT";
-		}
 		for(CodeableConcept[] codeset : diagnosisCodes) {
 			for(CodeableConcept possibleCode : codeset) {
-				if(code.getcode().equalsIgnoreCase(possibleCode.getcode()) && sys.equalsIgnoreCase(possibleCode.getsystem()) ) {
+				if(code.equals(possibleCode))
 					return true;
-				}
 			}
 		}
 		return false;
@@ -587,9 +571,8 @@ public class ControllerUtils {
 	
 	public static boolean isSTIMed(CodeableConcept code) {
 		for(CodeableConcept possibleCode : STIMed) {
-			if(code.getcode().equals(possibleCode.getcode()) && code.getsystem().equals(possibleCode.getsystem()) ) {
+			if(code.equals(possibleCode))
 				return true;
-			}
 		}
 		return false;
 	}

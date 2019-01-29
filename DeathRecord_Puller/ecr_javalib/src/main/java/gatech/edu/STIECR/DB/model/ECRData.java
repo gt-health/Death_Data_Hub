@@ -1,5 +1,6 @@
 package gatech.edu.STIECR.DB.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -63,7 +64,7 @@ public class ECRData {
 	public ECRData() {}
 	
 	public ECRData(ECR ecr, int id) {
-		ecr.setId(Integer.toString(id));
+		ecr.setId(id);
 		data = ecr;
 		ecrId = id;
 		version = 1;
@@ -75,7 +76,7 @@ public class ECRData {
 				firstName = patientName.getgiven();
 		}
 		zipCode = AddressUtil.findZip(ecr.getPatient().getstreetAddress());
-		diagnosisCode = ecr.getPatient().getDiagnosis().get(0).getCode();
+		diagnosisCode = ecr.getPatient().getDiagnosis().getCode();
 		created_date = new Date();
 		last_updated = new Date();
 	}

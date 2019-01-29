@@ -6,13 +6,17 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
+
+import gatech.edu.DeathRecordPuller.Controller.config.PatientEverythingConfig;
 
 @EnableAutoConfiguration
 @ComponentScan("gatech.edu.common.FHIR.client")
 @ComponentScan("gatech.edu.DeathRecordPuller.Controller")
 @SpringBootApplication
+@EnableConfigurationProperties(PatientEverythingConfig.class)
 public class ApplicationTest extends SpringBootServletInitializer{
 
 	private static final Logger log = LoggerFactory.getLogger(ApplicationTest.class);

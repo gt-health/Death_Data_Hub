@@ -8,10 +8,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class LabOrderCode extends CodeableConcept{
 	@JsonProperty("Laboratory_Results")
 	List<LabResult> laboratory_Results;
-	@JsonProperty("Facility")
-	protected Facility facility = new Facility();
-	@JsonProperty("Provider")
-	protected Provider provider = new Provider();
 	
 	public LabOrderCode() {
 		super();
@@ -25,22 +21,6 @@ public class LabOrderCode extends CodeableConcept{
 	public void setLaboratory_Results(List<LabResult> laboratory_Results) {
 		this.laboratory_Results = laboratory_Results;
 	}
-	
-	public Facility getFacility() {
-		return facility;
-	}
-	
-	public void setFacility(Facility facility) {
-		this.facility = facility;
-	}
-	
-	public Provider getProvider() {
-		return provider;
-	}
-	public void setProvider(Provider provider) {
-		this.provider = provider;
-	}
-	
 	
 	@Override
 	public int compareTo(CodeableConcept o) {

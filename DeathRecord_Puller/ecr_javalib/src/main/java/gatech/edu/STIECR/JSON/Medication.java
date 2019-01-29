@@ -10,7 +10,7 @@ public class Medication implements Comparable<Medication>{
 	@JsonProperty("Display")
 	private String display = "";
 	@JsonProperty("Dosage")
-	private Dosage dosage = new Dosage();
+	private Dosage dosage;
 	@JsonProperty("Date")
 	private String date = "";
 	@JsonProperty("Frequency")

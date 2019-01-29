@@ -5,6 +5,7 @@ export function getCase(caseId) {
     dispatch(getCaseRequestedAction());
     return axios.get(process.env.REACT_APP_API_URL_CASE+'?id='+caseId)
       .then((response) => {
+    	  console.log('response: ',response);
         var theCase = response.data;
         dispatch(getCaseFulfilledAction(theCase));
       })
@@ -28,6 +29,7 @@ function getCaseRejectedAction() {
 }
 
 function getCaseFulfilledAction(theCase) {
+	console.log('theCase: ',theCase);
   return {
     type: 'GET_CASE_FULFILLED',
     theCase

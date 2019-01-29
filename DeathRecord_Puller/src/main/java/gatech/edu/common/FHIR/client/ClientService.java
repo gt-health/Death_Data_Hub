@@ -40,6 +40,7 @@ import ca.uhn.fhir.model.dstu2.resource.RelatedPerson;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.parser.LenientErrorHandler;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
 import gatech.edu.STIECR.JSON.Name;
 
