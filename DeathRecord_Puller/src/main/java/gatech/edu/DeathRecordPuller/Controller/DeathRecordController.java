@@ -104,7 +104,7 @@ public class DeathRecordController {
 		this.FHIRClient.initializeClient();
 	}
 
-	@RequestMapping(value = "/DeathRecord", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/IngestDeathRecord", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<ECR> DeathRecord(@RequestParam(value = "id") String id) {
 		HttpStatus returnStatus = HttpStatus.OK;
 		ECR ecr = new ECR();

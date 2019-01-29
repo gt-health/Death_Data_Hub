@@ -33,8 +33,8 @@ public class Provider implements Comparable<Provider>{
 		return id;
 	}
 
-	public void setid(TypeableID id) {
-		this.id = id;
+	public void setid(TypeableID iD) {
+		this.id = iD;
 	}
 
 	public String getname() {
@@ -125,12 +125,10 @@ public class Provider implements Comparable<Provider>{
 			this.address = newProvider.getaddress();
 		}
 		if(newProvider.getcountry() != null) {
-			log.debug("ECR PROVIDER --- updating country");
-			this.name = newProvider.getcountry();
 			this.country = newProvider.getcountry();
 		}
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -208,4 +206,5 @@ public class Provider implements Comparable<Provider>{
 	public int compareTo(Provider o) {
 		return this.name.compareTo(o.getname());
 	}
+	
 }

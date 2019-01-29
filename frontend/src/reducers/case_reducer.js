@@ -1,6 +1,19 @@
 import { identifiers } from '../helpers/identifiers.js';
 
-export function caseReducer(state = { inProgress: true }, action) {
+const initialState = {
+	inProgress: true,
+//	raw: {
+//		Patient: {
+//			Name: {
+//				
+//			}
+//		}, 
+//		Provider: [],
+//		Facility: {}
+//	}
+}
+
+export function caseReducer(state = initialState, action) {
   switch(action.type) {
     case 'GET_CASE_REQUESTED': {
       return {

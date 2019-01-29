@@ -40,6 +40,7 @@ import ca.uhn.fhir.model.dstu2.resource.RelatedPerson;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.parser.LenientErrorHandler;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
 import gatech.edu.STIECR.JSON.Name;
 
@@ -192,6 +193,24 @@ public class ClientService {
 			results = client.read()
 					.resource(Patient.class)
 					.withId(patientId)
+					.execute();
+			log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
+		}
+		catch(BaseServerResponseException e) {
+			
+		}
+		return results;
+	}
+	
+	public Bundle getPatientAndReturnBundle(IdDt patientId) {
+		log.info("serverBaseUrl="+currentBaseUrl);
+		log.info("Getting getPatientAndReturnBundle with patientId="+patientId);
+		Bundle results = new Bundle();
+		try {
+			results = client.search()
+					.forResource(Patient.class)
+					.where(Patient.RES_ID.matches().value(patientId.getIdPart()))
+					.returnBundle(Bundle.class)
 					.execute();
 			log.info("Found :"+ctx.newJsonParser().encodeResourceToString(results));
 		}
