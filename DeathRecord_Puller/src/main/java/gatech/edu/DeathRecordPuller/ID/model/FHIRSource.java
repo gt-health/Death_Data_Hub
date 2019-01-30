@@ -3,7 +3,8 @@ package gatech.edu.DeathRecordPuller.ID.model;
 public class FHIRSource {
 	protected String fhirServerUrl;
 	protected String fhirSecurity;
-	protected String fhirPatiendId;
+	protected String fhirVersion;
+	protected String fhirPatientId;
 	protected String type;
 	public String getFhirServerUrl() {
 		return fhirServerUrl;
@@ -17,11 +18,17 @@ public class FHIRSource {
 	public void setFhirSecurity(String fhirSecurity) {
 		this.fhirSecurity = fhirSecurity;
 	}
-	public String getFhirPatiendId() {
-		return fhirPatiendId;
+	public String getFhirVersion() {
+		return fhirVersion;
 	}
-	public void setFhirPatiendId(String fhirPatiendId) {
-		this.fhirPatiendId = fhirPatiendId;
+	public void setFhirVersion(String fhirVersion) {
+		this.fhirVersion = fhirVersion;
+	}
+	public String getFhirPatientId() {
+		return fhirPatientId;
+	}
+	public void setFhirPatientId(String fhirPatiendId) {
+		this.fhirPatientId = fhirPatiendId;
 	}
 	public String getType() {
 		return type;
@@ -33,9 +40,10 @@ public class FHIRSource {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((fhirPatiendId == null) ? 0 : fhirPatiendId.hashCode());
+		result = prime * result + ((fhirPatientId == null) ? 0 : fhirPatientId.hashCode());
 		result = prime * result + ((fhirSecurity == null) ? 0 : fhirSecurity.hashCode());
 		result = prime * result + ((fhirServerUrl == null) ? 0 : fhirServerUrl.hashCode());
+		result = prime * result + ((fhirVersion == null) ? 0 : fhirVersion.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
@@ -48,10 +56,10 @@ public class FHIRSource {
 		if (getClass() != obj.getClass())
 			return false;
 		FHIRSource other = (FHIRSource) obj;
-		if (fhirPatiendId == null) {
-			if (other.fhirPatiendId != null)
+		if (fhirPatientId == null) {
+			if (other.fhirPatientId != null)
 				return false;
-		} else if (!fhirPatiendId.equals(other.fhirPatiendId))
+		} else if (!fhirPatientId.equals(other.fhirPatientId))
 			return false;
 		if (fhirSecurity == null) {
 			if (other.fhirSecurity != null)
@@ -63,6 +71,11 @@ public class FHIRSource {
 				return false;
 		} else if (!fhirServerUrl.equals(other.fhirServerUrl))
 			return false;
+		if (fhirVersion == null) {
+			if (other.fhirVersion != null)
+				return false;
+		} else if (!fhirVersion.equals(other.fhirVersion))
+			return false;
 		if (type == null) {
 			if (other.type != null)
 				return false;
@@ -72,8 +85,7 @@ public class FHIRSource {
 	}
 	@Override
 	public String toString() {
-		return "FHIRSource [fhirServerUrl=" + fhirServerUrl + ", fhirSecurity=" + fhirSecurity + ", fhirPatiendId="
-				+ fhirPatiendId + ", type=" + type + "]";
+		return "FHIRSource [fhirServerUrl=" + fhirServerUrl + ", fhirSecurity=" + fhirSecurity + ", fhirVersion="
+				+ fhirVersion + ", fhirPatientId=" + fhirPatientId + ", type=" + type + "]";
 	}
-	
 }

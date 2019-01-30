@@ -10,13 +10,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 
-import gatech.edu.DeathRecordPuller.Controller.config.PatientEverythingConfig;
-
 @EnableAutoConfiguration
 @ComponentScan("gatech.edu.common.FHIR.client")
 @ComponentScan("gatech.edu.DeathRecordPuller.Controller")
 @SpringBootApplication
-@EnableConfigurationProperties(PatientEverythingConfig.class)
 public class ApplicationTest extends SpringBootServletInitializer{
 
 	private static final Logger log = LoggerFactory.getLogger(ApplicationTest.class);
