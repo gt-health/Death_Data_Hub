@@ -56,7 +56,6 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.gclient.IFetchConformanceUntyped;
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
-import gatech.edu.DeathRecordPuller.Controller.config.PatientEverythingConfig;
 import gatech.edu.DeathRecordPuller.ID.model.FHIRSource;
 import gatech.edu.DeathRecordPuller.ID.model.IDEntry;
 import gatech.edu.DeathRecordPuller.ID.service.IDService;
@@ -68,16 +67,14 @@ public class PatientEverythingController {
 	
 	protected FhirContext ctx2;
 	protected FhirContext ctx3;
-	protected List<IGenericClient> fhirServers;
 	protected IParser jsonParser2;
 	protected IParser jsonParser3;
 	protected ObjectMapper mapper;
 	@Autowired
 	protected IDService idService;
 	@Autowired
-	public PatientEverythingController(PatientEverythingConfig config) {
+	public PatientEverythingController() {
 		mapper = new ObjectMapper();
-		fhirServers = new ArrayList<IGenericClient>();
 		ctx2 = FhirContext.forDstu2();
 		ctx2.getRestfulClientFactory().setSocketTimeout(60000);
 		ctx2.getRestfulClientFactory().setConnectionRequestTimeout(36000);
@@ -90,87 +87,39 @@ public class PatientEverythingController {
 		ctx3.getRestfulClientFactory().setPoolMaxTotal(10);
 		jsonParser2 = ctx2.newJsonParser();
 		jsonParser3 = ctx3.newJsonParser();
-		for(int i=0;i<config.getServerList().size();i++) {
-			String serverName = config.getServerList().get(i);
-			FhirContext ctx = ctx2;
-			if(config.getFhirVersion().get(i).equals("stu3")) {
-				ctx = ctx3;
-			}
-			fhirServers.add(ctx.getRestfulClientFactory().newGenericClient(serverName));
-		}
-	}
-	/**
-	 * Old version of get everything, using the same id for each endpoint
-	 * @param id
-	 * @return
-	 * @throws JsonProcessingException
-	 */
-	@RequestMapping(value = "/Patient/{id}/$everything", method = RequestMethod.GET, produces = "application/json", headers= "IdMapping=false")
-	public ResponseEntity<String> getPatientEverything(@PathVariable String id) throws JsonProcessingException{
-		ca.uhn.fhir.model.dstu2.resource.Bundle returnBundleDstu2 = new ca.uhn.fhir.model.dstu2.resource.Bundle();
-		Bundle returnBundleStu3 = new Bundle();
-		for(IGenericClient endpoint: fhirServers) {
-			IFhirVersion version = endpoint.getFhirContext().getVersion();
-			if(version instanceof FhirDstu2) {
-				ca.uhn.fhir.model.dstu2.resource.Bundle newEntries = new ca.uhn.fhir.model.dstu2.resource.Bundle(); 
-				if(serverSupportsOperationDstu2(endpoint,"everything")) {
-					newEntries = getEverythingDstu2(endpoint,id);
-				}
-				else {
-					newEntries = manuallyGetEverythingDstu2(endpoint,id);
-				}
-				for(Entry newEntry : newEntries.getEntry()) {
-					returnBundleDstu2.addEntry(newEntry);
-				}
-			}
-			else if(version instanceof FhirDstu3) {
-				if(serverSupportsOperationDstu3(endpoint,"everything")) {
-					Bundle newEntries = getEverythingDstu3(endpoint,id);
-					for(BundleEntryComponent newEntry : newEntries.getEntry()) {
-						returnBundleStu3.addEntry(newEntry);
-					}
-				}
-			}
-		}
-		Bundle convertedBundle = convertDstu2BundleToStu3Bundle(returnBundleDstu2);
-		for(BundleEntryComponent newEntry : convertedBundle.getEntry()) {
-			returnBundleStu3.addEntry(newEntry);
-		}
-		return new ResponseEntity<String>(jsonParser3.encodeResourceToString(returnBundleStu3), HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/Patient/Search", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<String> getPatientEverythingIdServiceEnabled(@RequestParam(name= "case-number") String caseNumber,
-			@RequestParam String name,@RequestParam String family,@RequestParam String given) throws JsonProcessingException{
-		//Check for params
-		if(name.isEmpty() && (family.isEmpty() && name.isEmpty()) && caseNumber.isEmpty()) {
-			return new ResponseEntity<String>("No Params specified please use at least one of these parameters: [case-number,name,family.given]",HttpStatus.BAD_REQUEST);
-		}
+	public ResponseEntity<String> getPatientEverythingIdServiceEnabled(@RequestParam(name= "case-number", required = true) String caseNumber,
+			@RequestParam(name="medical-examiner-office", required = true)String medicalExaminerOffice, @RequestParam(required = false) String name,
+			@RequestParam(required = false) String family,@RequestParam(required = false) String given) throws JsonProcessingException{
 		ca.uhn.fhir.model.dstu2.resource.Bundle returnBundleDstu2 = new ca.uhn.fhir.model.dstu2.resource.Bundle();
 		Bundle returnBundleStu3 = new Bundle();
-		IDEntry idEntry = idService.getIDEntry(caseNumber,name,family,given);
-		for(IGenericClient endpoint: fhirServers) {
-			FHIRSource fhirSource = idEntry.getFhirSource(endpoint.getServerBase());
-			if(fhirSource != null) {
-				String endpointId = fhirSource.getFhirPatiendId();
-				IFhirVersion version = endpoint.getFhirContext().getVersion();
-				if(version instanceof FhirDstu2) {
-					ca.uhn.fhir.model.dstu2.resource.Bundle newEntries = new ca.uhn.fhir.model.dstu2.resource.Bundle(); 
-					if(serverSupportsOperationDstu2(endpoint,"everything")) {
-						newEntries = getEverythingDstu2(endpoint,endpointId);
+		List<IDEntry> idEntries = idService.getIDEntries(caseNumber,medicalExaminerOffice,name,family,given);
+		for(IDEntry idEntry:idEntries) {
+			for(FHIRSource fhirSource:idEntry.getListOfFhirSources()) {
+				IGenericClient endpoint = constructGenericClient(fhirSource);
+				String endpointId = fhirSource.getFhirPatientId();
+				if(endpoint != null && endpointId != null) {
+					IFhirVersion version = endpoint.getFhirContext().getVersion();
+					if(version instanceof FhirDstu2) {
+						ca.uhn.fhir.model.dstu2.resource.Bundle newEntries = new ca.uhn.fhir.model.dstu2.resource.Bundle(); 
+						if(serverSupportsOperationDstu2(endpoint,"everything")) {
+							newEntries = getEverythingDstu2(endpoint,endpointId);
+						}
+						else {
+							newEntries = manuallyGetEverythingDstu2(endpoint,endpointId);
+						}
+						for(Entry newEntry : newEntries.getEntry()) {
+							returnBundleDstu2.addEntry(newEntry);
+						}
 					}
-					else {
-						newEntries = manuallyGetEverythingDstu2(endpoint,endpointId);
-					}
-					for(Entry newEntry : newEntries.getEntry()) {
-						returnBundleDstu2.addEntry(newEntry);
-					}
-				}
-				else if(version instanceof FhirDstu3) {
-					if(serverSupportsOperationDstu3(endpoint,"everything")) {
-						Bundle newEntries = getEverythingDstu3(endpoint,endpointId);
-						for(BundleEntryComponent newEntry : newEntries.getEntry()) {
-							returnBundleStu3.addEntry(newEntry);
+					else if(version instanceof FhirDstu3) {
+						if(serverSupportsOperationDstu3(endpoint,"everything")) {
+							Bundle newEntries = getEverythingDstu3(endpoint,endpointId);
+							for(BundleEntryComponent newEntry : newEntries.getEntry()) {
+								returnBundleStu3.addEntry(newEntry);
+							}
 						}
 					}
 				}
@@ -332,5 +281,17 @@ public class PatientEverythingController {
 		catch (Exception e) {
 			return new MedicationRequest();
 		}
+	}
+	
+	public IGenericClient constructGenericClient(FHIRSource fhirSource) {
+		if(fhirSource.getFhirServerUrl() == null || fhirSource.getFhirServerUrl().isEmpty())
+			return null;
+		if(fhirSource.getFhirVersion().equalsIgnoreCase("DSTU2")) {
+			return ctx2.newRestfulGenericClient(fhirSource.getFhirServerUrl());
+		}
+		else if(fhirSource.getFhirVersion().equalsIgnoreCase("STU3")) {
+			return ctx3.newRestfulGenericClient(fhirSource.getFhirServerUrl());
+		}
+		return null;
 	}
 }

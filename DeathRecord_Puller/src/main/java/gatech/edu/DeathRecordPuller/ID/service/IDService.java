@@ -1,6 +1,7 @@
 package gatech.edu.DeathRecordPuller.ID.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
@@ -15,34 +16,53 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import gatech.edu.DeathRecordPuller.ID.model.IDEntry;
+import gatech.edu.DeathRecordPuller.ID.model.IDList;
 
 @Service
-@Configuration
-@ConfigurationProperties(prefix="IDService")
 @Primary
 public class IDService {
-	String idServiceURL;
 	RestTemplate restTemplate;
+	@Autowired
+	IDServiceConfig iDServiceConfig;
+
 	public IDService() {
 		restTemplate = new RestTemplate();
 	}
 	
-	public IDEntry getIDEntry(String caseNumber,String name,String family,String given){
-		UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(idServiceURL).path("search/").build();
-		Map<String,String> params = new HashMap<String,String>();
-		if(!caseNumber.isEmpty()) {
-			params.put("case-number", caseNumber);
+	public List<IDEntry> getIDEntries(String caseNumber,String medicalExaminerOffice,String name,String family,String given){
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(iDServiceConfig.getIdServiceURL()).path("search/");
+		if(caseNumber != null) {
+			uriComponentsBuilder.queryParam("case-number", caseNumber);
 		}
-		if(!family.isEmpty()) {
-			params.put("family", family);
+		if(medicalExaminerOffice != null) {
+			uriComponentsBuilder.queryParam("medical-examiner-office", medicalExaminerOffice);
 		}
-		if(!given.isEmpty()) {
-			params.put("given", given);
+		if(family != null) {
+			uriComponentsBuilder.queryParam("family", family);
 		}
-		if(!name.isEmpty()) {
-			params.put("name", name);
+		if(given != null) {
+			uriComponentsBuilder.queryParam("given", given);
 		}
-		IDEntry output = restTemplate.getForEntity(uriComponents.toUri().toString(), IDEntry.class,params).getBody();
-		return output;
+		if(name != null) {
+			uriComponentsBuilder.queryParam("name", name);
+		}
+		IDList output = restTemplate.getForEntity(uriComponentsBuilder.build().toUri(), IDList.class).getBody();
+		return output.getList();
+	}
+
+	public IDServiceConfig getiDServiceConfig() {
+		return iDServiceConfig;
+	}
+
+	public void setiDServiceConfig(IDServiceConfig iDServiceConfig) {
+		this.iDServiceConfig = iDServiceConfig;
+	}
+	
+	public RestTemplate getRestTemplate() {
+		return restTemplate;
+	}
+
+	public void setRestTemplate(RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
 	}
 }
